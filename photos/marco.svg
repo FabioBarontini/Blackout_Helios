@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="820" viewBox="0 0 720 820">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1d243f"/><stop offset="1" stop-color="#080b12"/></linearGradient>
+ <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .09"/></feComponentTransfer></filter>
+</defs>
+<rect width="720" height="820" fill="url(#g)"/>
+<rect width="720" height="820" filter="url(#grain)" opacity=".45"/>
+<path d="M0 650 Q360 560 720 650 V820 H0Z" fill="#202a4c"/>
+<ellipse cx="360" cy="350" rx="150" ry="205" fill="#c98e6b"/>
+<path d="M205 330 Q205 120 360 125 Q525 120 520 330 Q465 220 360 230 Q270 225 205 330Z" fill="#1b1a19"/>
+<circle cx="300" cy="350" r="10" fill="#171717"/><circle cx="420" cy="350" r="10" fill="#171717"/>
+<path d="M300 425 Q360 455 420 425" fill="none" stroke="#5d3328" stroke-width="8" stroke-linecap="round"/>
+<path d="M235 300 Q300 265 330 300 M390 300 Q450 265 485 300" fill="none" stroke="#1b1a19" stroke-width="12" stroke-linecap="round"/>
+<rect x="32" y="32" width="656" height="756" rx="18" fill="none" stroke="#6366f1" stroke-opacity=".45" stroke-width="3"/>
+<text x="48" y="70" fill="#6366f1" font-family="monospace" font-size="22" letter-spacing="4">HELIOS CORP. // ID PHOTO</text>
+<text x="48" y="750" fill="#e8e8e8" font-family="sans-serif" font-weight="700" font-size="30">MARCO FERRETTI</text>
+<text x="48" y="780" fill="#9ca3af" font-family="monospace" font-size="18">CASE HX-047 · FICTIONAL DOSSIER PORTRAIT</text>
+</svg>
