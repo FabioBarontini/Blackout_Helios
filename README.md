@@ -50,3 +50,12 @@ I ritratti inclusi sono **ritratti grafici fittizi**, creati per evitare l'uso d
 ## Pubblicazione
 
 Il progetto è statico e può essere pubblicato su Vercel.
+
+
+## Laboratori interattivi BLACKOUT
+La versione integrata aggiunge una voce **Laboratori** al sito principale con tre prove:
+1. **Build the Network** — costruzione drag & drop della rete, collegamenti, test di comunicazione e verifica progressiva.
+2. **The Message** — attività discovery: gli studenti devono capire quali informazioni aggiungere a un contenuto per farlo arrivare, distinguere comunicazioni contemporanee e ricostruire parti.
+3. **Invisible Services** — quattro situazioni-problema con verifica su DHCP, DNS, HTTP e HTTPS.
+
+I laboratori non mostrano nella prima fase i nomi dei campi tecnici del messaggio.

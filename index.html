@@ -61,11 +61,64 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 .admin-hero{grid-template-columns:minmax(0,1.1fr) minmax(330px,.9fr)}.admin-content-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:18px 0 10px}.admin-kpis{grid-template-columns:repeat(4,1fr)}.admin-kpi{background:linear-gradient(180deg,#071522,#050c14);border:1px solid #164e63;border-radius:7px;padding:15px}.admin-kpi b{display:block;font:700 26px monospace;color:#e0f2fe}.admin-kpi span{display:block;color:#64748b;font:10px monospace;margin-top:4px}.admin-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.admin-panel{background:linear-gradient(180deg,#071522,#050c14);border:1px solid #164e63;border-radius:7px;padding:18px}.admin-panel h3{color:#67e8f9;font:12px monospace;letter-spacing:.08em}.results-table{width:100%;border-collapse:collapse;font-size:11px}.results-table th{color:#67e8f9;font:10px monospace;text-align:left;padding:10px;border-bottom:1px solid #164e63;background:#06111c}.results-table td{padding:10px;border-bottom:1px solid #172536;color:#9fb0c1;vertical-align:top}.results-table tr:hover td{background:#07131f}.score-chip{display:inline-block;border:1px solid #164e63;background:#06111c;border-radius:4px;padding:3px 7px;color:#7dd3fc;font:10px monospace}.solution-card{border:1px solid #7f1d1d!important;background:linear-gradient(180deg,#180d12,#07101a)!important}.solution-card h2{color:#f87171;font-size:15px;letter-spacing:.08em}.solution-card code{color:#7dd3fc}.score-rubric{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.score-card{background:#06111c;border:1px solid #334155;border-radius:5px;padding:10px;text-align:center}.score-card b{display:block;color:#e2e8f0;font:700 18px monospace}.score-card span{color:#64748b;font:9px monospace}.admin-note{margin-top:10px;color:#64748b;font-size:10px;line-height:1.5}.admin-visual{margin-bottom:16px}.admin-visual img{height:245px;object-fit:cover}.solution-steps{display:grid;gap:7px;margin-top:12px}.solution-step{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start;padding:9px;background:#06111c;border:1px solid #1e293b;border-radius:5px}.solution-step b{color:#f87171;font:11px monospace}.solution-step span{color:#9fb0c1;font-size:11px;line-height:1.45}
 @media(max-width:1100px){.suspect-grid-wow{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-panel,.content-grid,.verdict-shell,.admin-hero,.admin-layout{grid-template-columns:1fr}.timeline-wow{grid-template-columns:1fr 1fr}.time-node:nth-child(2){border-right:0}.time-node:nth-child(n+3){border-top:1px solid #164e63}.packet-anatomy{grid-template-columns:1fr 1fr}.network-map{grid-template-columns:1fr 1fr}.admin-kpis{grid-template-columns:1fr 1fr}}
 @media(max-width:720px){.stat-strip,.admin-kpis,.score-rubric{grid-template-columns:1fr 1fr}.timeline-wow{grid-template-columns:1fr}.time-node{border-right:0;border-bottom:1px solid #164e63}.guide-shell{grid-template-columns:1fr}.filter-card{grid-template-columns:1fr}.packet-anatomy,.network-map{grid-template-columns:1fr}.page:not(.suspects-page):not(.suspect-detail-page)>h1{font-size:35px}}
+
+/* =========================================================
+   BLACKOUT // LABORATORI INTERATTIVI
+   Integrati nel sito Helios esistente
+   ========================================================= */
+.lab-shell{max-width:1500px;margin:auto}
+.lab-hero{background:linear-gradient(120deg,#06121b,#07131f);border:1px solid #164e63;border-radius:9px;padding:24px;margin:20px 0 16px}
+.lab-hero h2{font-size:30px;margin:5px 0 10px}.lab-hero p{color:#9fb3c8;line-height:1.7;font-size:14px}
+.lab-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0}
+.lab-tab{background:#07131f;color:#94a3b8;border:1px solid #164e63;border-radius:7px;padding:10px 13px;font:800 11px monospace;cursor:pointer}
+.lab-tab.active,.lab-tab:hover{color:#67e8f9;border-color:#0ea5e9;background:#0ea5e910}
+.lab-panel{display:none}.lab-panel.active{display:block}
+.lab-grid{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.lab-card{background:#07131f;border:1px solid #164e63;border-radius:8px;padding:18px}
+.lab-card h3{color:#67e8f9;font:12px monospace;letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+.lab-muted{color:#94a3b8;font-size:13px;line-height:1.65}
+.lab-mission{border-left:3px solid #38bdf8;background:#06111c;padding:14px 16px;margin-bottom:16px;color:#cbd5e1;line-height:1.6}
+.lab-mission b{color:#67e8f9}
+.lab-inventory{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lab-piece{min-height:78px;background:#0d2029;border:1px solid #365965;border-radius:10px;color:#e2e8f0;display:grid;place-content:center;text-align:center;font:800 11px monospace;cursor:pointer;user-select:none}
+.lab-piece:hover{border-color:#38bdf8;transform:translateY(-2px)}
+.lab-board{position:relative;min-height:500px;background-image:linear-gradient(#ffffff07 1px,transparent 1px),linear-gradient(90deg,#ffffff07 1px,transparent 1px);background-size:34px 34px;border:1px solid #315663;border-radius:10px;overflow:hidden}
+.lab-board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.lab-node{position:absolute;width:105px;min-height:72px;transform:translate(-50%,-50%);background:#10242d;border:1px solid #426873;border-radius:12px;display:grid;place-items:center;text-align:center;cursor:grab;user-select:none;z-index:2;box-shadow:0 8px 25px #0008}
+.lab-node.sel{border:2px solid #4de5ff;box-shadow:0 0 0 3px #4de5ff22}
+.lab-node .ico{font-size:25px}.lab-node .nm{font:800 10px monospace;margin-top:3px}.lab-node .nid{font:9px monospace;color:#78969e}
+.lab-line{stroke:#4de5ff;stroke-width:3;opacity:.7}
+.lab-tests{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.lab-test{padding:11px;border:1px solid #164e63;border-radius:7px;background:#06111c;min-height:105px}
+.lab-test.done{border-color:#059669;background:#061a17}.lab-test.lock{opacity:.4}
+.lab-test b{display:block;color:#38bdf8;font:10px monospace}.lab-test strong{display:block;margin:7px 0;font-size:12px}.lab-test span{color:#94a3b8;font-size:10px;line-height:1.4}
+.lab-result{margin-top:12px;padding:13px;border:1px solid #164e63;border-radius:7px;background:#050c13;color:#94a3b8;line-height:1.55;font-size:12px}
+.lab-result.ok{border-color:#059669;color:#86efac}.lab-result.bad{border-color:#7f1d1d;color:#fda4af}
+.lab-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.lab-select{background:#08151d;color:#e2e8f0;border:1px solid #164e63;border-radius:7px;padding:10px}
+.lab-discovery{display:grid;grid-template-columns:250px 1fr;gap:16px}
+.lab-machines .machine-mini{padding:11px;border:1px solid #164e63;border-radius:8px;background:#06111c;margin:7px 0}
+.machine-mini b{display:block;color:#e2f2f7;font-size:12px}.machine-mini code{color:#67e8f9;font:11px monospace}
+.lab-archive{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.lab-token{min-height:65px;border:1px solid #365965;background:#10222b;border-radius:9px;display:grid;place-content:center;text-align:center;padding:8px;font:800 11px monospace;cursor:grab;user-select:none}
+.lab-token:hover{border-color:#38bdf8}.lab-envelope{min-height:170px;border:2px dashed #496b74;border-radius:12px;background:radial-gradient(circle,#102933,#071219);padding:14px;display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px}
+.lab-envelope.over{border-color:#4de5ff;background:#4de5ff08}
+.lab-attached{min-width:105px;min-height:58px;padding:8px;border:1px solid #47717b;border-radius:8px;background:#122832;display:grid;place-content:center;text-align:center;font:800 10px monospace;cursor:pointer}
+.lab-clue{border-left:3px solid #fbbf24;background:#fbbf2408;padding:12px 14px;color:#cbd5e1;font-size:12px;line-height:1.55;margin:12px 0}
+.lab-challenge{margin-top:16px}
+.lab-scenarios{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lab-scenario{background:#06111c;border:1px solid #164e63;border-radius:8px;padding:16px}
+.lab-scenario h3{margin-bottom:7px}.lab-choices{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.lab-choice{padding:8px 10px;border:1px solid #164e63;background:#0a1820;color:#cbd5e1;border-radius:6px;cursor:pointer;font:800 10px monospace}.lab-choice.good{border-color:#059669;background:#06251c;color:#86efac}.lab-choice.bad{border-color:#7f1d1d;background:#260b10;color:#fda4af}
+.lab-trace{margin-top:10px;padding:11px;border-left:2px solid #fbbf24;background:#fbbf2408;color:#a8b8c8;font-size:11px;line-height:1.5}
+.lab-final{margin-top:18px;border:1px solid #0e7490;background:linear-gradient(120deg,#06212b,#07131f);border-radius:8px;padding:17px;color:#cbd5e1}
+.lab-final b{color:#67e8f9}
+@media(max-width:1000px){.lab-grid,.lab-discovery{grid-template-columns:1fr}.lab-tests{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.lab-scenarios{grid-template-columns:1fr}.lab-archive{grid-template-columns:1fr 1fr}.lab-tests{grid-template-columns:1fr}.lab-board{min-height:560px}}
 </style>
 </head>
 <body>
 <nav><div class="brand">BLACKOUT <span>HELIOS SECURITY</span></div><div class="nav-links">
-<button class="active" onclick="showPage('briefing')">⌂ Briefing</button><button onclick="showPage('suspects')">◉ Sospettati</button><button onclick="showPage('guide')">⌁ Wireshark</button><button onclick="showPage('submit')">◆ Verdetto</button><button onclick="showPage('admin')">▣ Admin</button>
+<button class="active" onclick="showPage('briefing')">⌂ Briefing</button><button onclick="showPage('labs')">⚙ Laboratori</button><button onclick="showPage('suspects')">◉ Sospettati</button><button onclick="showPage('guide')">⌁ Wireshark</button><button onclick="showPage('submit')">◆ Verdetto</button><button onclick="showPage('admin')">▣ Admin</button>
 </div></nav>
 
 <div id="page-briefing" class="page">
@@ -106,6 +159,149 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
  </div>
 </div>
 <div class="quote-bar">“Non è importante cosa pensi. È importante cosa puoi dimostrare.”<small>HELIOS CORP. SECURITY DIVISION</small></div>
+</div>
+
+
+<div id="page-labs" class="page">
+  <div class="lab-shell">
+    <div class="label">HELIOS CORP · TRAINING LAB · BLACKOUT</div>
+    <h1>Laboratori <span style="color:var(--accent)">BLACKOUT</span></h1>
+    <p class="subtitle">Tre prove di scoperta. Non leggere la soluzione: costruiscila, testala e correggila.</p>
+
+    <div class="lab-hero">
+      <div class="section-kicker">REGOLE DEL LABORATORIO</div>
+      <h2>Situazione → tentativo → errore → scoperta</h2>
+      <p>Qui non devi completare definizioni. Devi risolvere problemi. Il docente formalizzerà i nomi tecnici <strong>solo dopo</strong> che avrai trovato una soluzione.</p>
+    </div>
+
+    <div class="lab-tabs">
+      <button class="lab-tab active" onclick="openLabTab('lab1')">01 · BUILD THE NETWORK</button>
+      <button class="lab-tab" onclick="openLabTab('lab2')">02 · THE MESSAGE</button>
+      <button class="lab-tab" onclick="openLabTab('lab3')">03 · INVISIBLE SERVICES</button>
+    </div>
+
+    <!-- LAB 1 -->
+    <section id="lab1" class="lab-panel active">
+      <div class="lab-mission">
+        <b>MISSIONE 01</b><br>
+        Helios ha tre computer che devono poter comunicare. Hai a disposizione alcuni elementi.
+        <strong>I nomi sono visibili, ma nessuno ti spiega che cosa fanno.</strong>
+        Costruisci una soluzione e prova a far viaggiare un messaggio.
+      </div>
+
+      <div class="lab-grid">
+        <aside class="lab-card">
+          <h3>INVENTARIO</h3>
+          <p class="lab-muted">Clicca per aggiungere elementi al tavolo.</p>
+          <div class="lab-inventory" id="lab1Inventory"></div>
+          <div class="lab-controls">
+            <button class="btn btn-outline" onclick="lab1Clear()">SVUOTA</button>
+            <button class="btn btn-outline" onclick="lab1Hint()">INDIZIO</button>
+          </div>
+          <div id="lab1Hint" class="lab-result" style="display:none"></div>
+        </aside>
+
+        <div class="lab-card">
+          <h3>TAVOLO DI LAVORO</h3>
+          <p class="lab-muted">Trascina i nodi. Per collegare due elementi, seleziona prima uno e poi l'altro.</p>
+          <div class="lab-board" id="lab1Board">
+            <svg id="lab1Lines"></svg>
+            <div id="lab1Nodes"></div>
+          </div>
+          <div class="lab-controls">
+            <select id="lab1From" class="lab-select"></select>
+            <span>→</span>
+            <select id="lab1To" class="lab-select"></select>
+            <button class="btn btn-primary" onclick="lab1Send()">AVVIA TEST</button>
+            <button class="btn btn-outline" onclick="lab1Verify()">VERIFICA MISSIONE</button>
+          </div>
+          <div id="lab1Result" class="lab-result">Costruisci una prima soluzione.</div>
+        </div>
+      </div>
+
+      <div class="lab-tests">
+        <div class="lab-test" id="lab1m1"><b>MISSIONE 01</b><strong>Tre computer</strong><span>Almeno tre CLIENT devono poter comunicare.</span></div>
+        <div class="lab-test lock" id="lab1m2"><b>MISSIONE 02</b><strong>La rete cresce</strong><span>Quattro CLIENT e uno SWITCH devono partecipare alla comunicazione.</span></div>
+        <div class="lab-test lock" id="lab1m3"><b>MISSIONE 03</b><strong>Arriva il SERVER</strong><span>Il SERVER deve essere raggiungibile.</span></div>
+        <div class="lab-test lock" id="lab1m4"><b>MISSIONE 04</b><strong>Due reti</strong><span>Due gruppi devono comunicare attraverso una nuova situazione.</span></div>
+      </div>
+    </section>
+
+    <!-- LAB 2 -->
+    <section id="lab2" class="lab-panel">
+      <div class="lab-mission">
+        <b>MISSIONE 02</b><br>
+        Il messaggio è soltanto <strong>“CIAO”</strong>. Marta deve farlo arrivare a Luca.
+        Nella rete ci sono più macchine. <strong>Non esistono campi da compilare.</strong>
+        Devi decidere tu se il contenuto ha bisogno di qualcosa in più.
+      </div>
+
+      <div class="lab-discovery">
+        <aside class="lab-card lab-machines">
+          <h3>LE MACCHINE</h3>
+          <div class="machine-mini"><b>MARTA</b><code>192.168.10.15</code></div>
+          <div class="machine-mini"><b>LUCA</b><code>192.168.10.22</code></div>
+          <div class="machine-mini"><b>SARA</b><code>192.168.20.34</code></div>
+          <div class="machine-mini"><b>MARCO</b><code>192.168.10.31</code></div>
+          <div class="lab-clue">Luca deve ricevere “CIAO”. Gli altri no. <strong>Come può il sistema capire chi deve riceverlo?</strong></div>
+        </aside>
+
+        <div class="lab-card">
+          <h3>OFFICINA DEL MESSAGGIO</h3>
+          <div class="lab-envelope" id="lab2Envelope">
+            <div class="lab-attached" style="width:100%;cursor:default;border-color:#164e63">CIAO<br><span style="color:#67e8f9">CONTENUTO</span></div>
+            <div class="lab-muted" style="width:100%;text-align:center">Trascina qui ciò che ritieni utile.</div>
+          </div>
+
+          <h3 style="margin-top:16px">ARCHIVIO — INFORMAZIONI NON CLASSIFICATE</h3>
+          <div class="lab-archive" id="lab2Archive"></div>
+
+          <div class="lab-controls">
+            <button class="btn btn-primary" onclick="lab2Send()">LANCIA IL MESSAGGIO</button>
+            <button class="btn btn-outline" onclick="lab2Reset()">AZZERA</button>
+          </div>
+          <div id="lab2Result" class="lab-result">Prepara la tua prima ipotesi.</div>
+        </div>
+      </div>
+
+      <div class="lab-card lab-challenge">
+        <h3>NUOVO INCIDENTE — DUE COMUNICAZIONI IDENTICHE</h3>
+        <p class="lab-muted">Ora Marta invia contemporaneamente due “CIAO” a Luca. Stesso mittente, stesso destinatario, stesso contenuto. Eppure sono due comunicazioni diverse.</p>
+        <div class="lab-clue">Trova nell'archivio due informazioni che possano permettere di distinguerle.</div>
+        <div class="lab-envelope" id="lab2EnvelopeB">
+          <div class="lab-attached" style="width:48%;cursor:default">CIAO · A</div>
+          <div class="lab-attached" style="width:48%;cursor:default">CIAO · B</div>
+        </div>
+        <div class="lab-controls"><button class="btn btn-primary" onclick="lab2TestB()">TESTA LE DUE COMUNICAZIONI</button></div>
+        <div id="lab2ResultB" class="lab-result">Risolvi prima il problema precedente.</div>
+      </div>
+
+      <div class="lab-card lab-challenge">
+        <h3>ULTIMO INCIDENTE — IL MESSAGGIO SI SPEZZA</h3>
+        <p class="lab-muted">Un messaggio molto grande viene diviso in parti. Una parte manca, una arriva due volte e le altre arrivano fuori ordine.</p>
+        <div class="lab-clue">Che cosa dovrebbe accompagnare ogni parte per permettere al destinatario di ricostruire il messaggio?</div>
+        <div class="lab-envelope" id="lab2EnvelopeC"><div class="lab-muted">Trascina qui la tua ipotesi.</div></div>
+        <div class="lab-controls"><button class="btn btn-primary" onclick="lab2TestC()">PROVA A RICOSTRUIRE</button></div>
+        <div id="lab2ResultC" class="lab-result">Nessuna prova effettuata.</div>
+      </div>
+
+      <div class="lab-final">
+        <b>STOP — ORA TOCCA AL DOCENTE</b><br>
+        Scrivi con parole tue che cosa hai capito. I termini tecnici verranno introdotti dopo la scoperta.
+        <textarea id="lab2Reflection" style="margin-top:10px;width:100%;min-height:100px;background:#050b13;border:1px solid #164e63;color:#e2e8f0;border-radius:7px;padding:11px" placeholder="Oltre al contenuto, quali informazioni possono essere necessarie perché una comunicazione funzioni?"></textarea>
+      </div>
+    </section>
+
+    <!-- LAB 3 -->
+    <section id="lab3" class="lab-panel">
+      <div class="lab-mission">
+        <b>MISSIONE 03</b><br>
+        Quattro situazioni. Quattro problemi diversi. Prima formula una spiegazione, poi guarda la traccia e verifica.
+        <strong>Non partire dal nome del protocollo.</strong>
+      </div>
+      <div class="lab-scenarios" id="lab3Scenarios"></div>
+    </section>
+  </div>
 </div>
 
 <div id="page-suspects" class="page suspects-page"><div class="suspects-head"><div><div class="label">FASCICOLI PERSONALI · CLASSIFICATO</div><h1>SOSPETTATI</h1><p class="subtitle">Cinque persone, cinque storie, una sola verità. Analizza i profili, apri i fascicoli e scarica le catture di rete. <strong>Non fidarti delle apparenze.</strong></p></div><div class="case-stamp"><div>CASE ID: <b>HX-047</b></div><div>PROGETTO AURORA</div></div></div><div class="investigator-quote">“In una rete, ogni azione lascia una traccia.”<span>HELIOS CORP. SECURITY DIVISION</span></div><div class="suspect-grid-wow" id="suspect-grid"></div></div>
@@ -177,6 +373,167 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 
 <script src="config.js"></script>
 <script>
+
+/* =========================================================
+   BLACKOUT // LABORATORI
+   ========================================================= */
+function openLabTab(id){
+  document.querySelectorAll('.lab-panel').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.lab-tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs=[...document.querySelectorAll('.lab-tab')];
+  const idx=id==='lab1'?0:id==='lab2'?1:2;
+  tabs[idx]?.classList.add('active');
+}
+
+/* ---------- LAB 1: NETWORK BUILDER ---------- */
+const L1INFO={CLIENT:{i:'💻',c:''},SERVER:{i:'🖥️',c:''},SWITCH:{i:'🔀',c:''},ROUTER:{i:'🌐',c:''}};
+let l1nodes=[],l1links=[],l1count=0,l1selected=null,l1drag=null,l1offset={x:0,y:0};
+
+function lab1Add(type){
+  const id='N'+(++l1count);
+  const col=l1nodes.length%4,row=Math.floor(l1nodes.length/4);
+  l1nodes.push({id,type,x:110+col*190,y:95+row*145});
+  lab1Render();
+}
+function l1node(id){return l1nodes.find(n=>n.id===id)}
+function l1connected(a,b){return l1links.some(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a))}
+function l1path(a,b){
+  const seen=new Set([a]),q=[a];
+  while(q.length){
+    const cur=q.shift(); if(cur===b)return true;
+    l1links.forEach(e=>{
+      const nx=e.a===cur?e.b:e.b===cur?e.a:null;
+      if(nx&&!seen.has(nx)){seen.add(nx);q.push(nx)}
+    });
+  }
+  return false;
+}
+function l1Render(){
+  const board=document.getElementById('lab1Board'), nodes=document.getElementById('lab1Nodes'), svg=document.getElementById('lab1Lines');
+  if(!board)return;
+  const w=board.clientWidth,h=board.clientHeight; svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
+  svg.innerHTML=''; nodes.innerHTML='';
+  l1links.forEach(e=>{
+    const a=l1node(e.a),b=l1node(e.b);if(!a||!b)return;
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);line.setAttribute('class','lab-line');svg.appendChild(line);
+  });
+  l1nodes.forEach(n=>{
+    const d=document.createElement('div');d.className='lab-node'+(l1selected===n.id?' sel':'');
+    d.style.left=n.x+'px';d.style.top=n.y+'px';d.dataset.id=n.id;
+    d.innerHTML=`<div><div class="ico">${L1INFO[n.type].i}</div><div class="nm">${n.type}</div><div class="nid">${n.id}</div></div>`;
+    d.addEventListener('pointerdown',e=>{
+      e.preventDefault();l1drag=n;const r=board.getBoundingClientRect();l1offset.x=e.clientX-r.left-n.x;l1offset.y=e.clientY-r.top-n.y;
+      d.setPointerCapture?.(e.pointerId);
+    });
+    d.addEventListener('pointermove',e=>{
+      if(l1drag!==n)return;const r=board.getBoundingClientRect();
+      n.x=Math.max(55,Math.min(r.width-55,e.clientX-r.left-l1offset.x));n.y=Math.max(45,Math.min(r.height-45,e.clientY-r.top-l1offset.y));lab1Render();
+    });
+    d.addEventListener('pointerup',()=>l1drag=null);
+    d.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(l1selected&&l1selected!==n.id){
+        if(!l1connected(l1selected,n.id))l1links.push({a:l1selected,b:n.id});
+        l1selected=null;
+      }else l1selected=n.id;
+      lab1Render();
+    });
+    d.addEventListener('dblclick',e=>{
+      e.stopPropagation();l1nodes=l1nodes.filter(x=>x.id!==n.id);l1links=l1links.filter(x=>x.a!==n.id&&x.b!==n.id);l1selected=null;lab1Render();
+    });
+    nodes.appendChild(d);
+  });
+  lab1UpdateSelects();
+}
+function lab1UpdateSelects(){
+  ['lab1From','lab1To'].forEach(id=>{
+    const s=document.getElementById(id),old=s.value;s.innerHTML='';
+    l1nodes.forEach(n=>{const o=document.createElement('option');o.value=n.id;o.textContent=n.type+' '+n.id;s.appendChild(o)});
+    if(l1nodes.some(n=>n.id===old))s.value=old;
+  });
+}
+function lab1Clear(){l1nodes=[];l1links=[];l1selected=null;lab1Render();document.getElementById('lab1Result').className='lab-result';document.getElementById('lab1Result').textContent='Tavolo svuotato.'}
+function lab1Send(){
+  const a=document.getElementById('lab1From').value,b=document.getElementById('lab1To').value,r=document.getElementById('lab1Result');
+  if(!a||!b||a===b){r.className='lab-result bad';r.textContent='Scegli due elementi diversi.';return}
+  const ok=l1path(a,b);r.className='lab-result '+(ok?'ok':'bad');r.textContent=ok?'✓ COMUNICAZIONE RIUSCITA — esiste un percorso tra i due elementi.':'✗ COMUNICAZIONE FALLITA — non esiste un percorso tra i due elementi.';
+}
+function lab1Verify(){
+  const clients=l1nodes.filter(n=>n.type==='CLIENT'),sw=l1nodes.filter(n=>n.type==='SWITCH').length,sv=l1nodes.filter(n=>n.type==='SERVER').length,rt=l1nodes.filter(n=>n.type==='ROUTER').length;
+  let stage=1,ok=false,msg='';
+  if(clients.length>=3 && clients.slice(0,3).every(a=>clients.slice(0,3).some(b=>a.id!==b.id&&l1path(a.id,b.id)))){stage=1;ok=true;msg='MISSIONE 01 SUPERATA.'}
+  else {document.getElementById('lab1Result').className='lab-result bad';document.getElementById('lab1Result').textContent='MISSIONE 01: almeno tre CLIENT devono poter comunicare.';return}
+  document.getElementById('lab1m1').classList.add('done');document.getElementById('lab1m2').classList.remove('lock');
+  if(clients.length>=4&&sw>=1&&clients.slice(0,4).every(a=>clients.slice(0,4).some(b=>a.id!==b.id&&l1path(a.id,b.id)))){
+    document.getElementById('lab1m2').classList.add('done');document.getElementById('lab1m3').classList.remove('lock');
+    if(sv>=1&&clients.slice(0,4).every(a=>{const s=l1nodes.find(n=>n.type==='SERVER');return s&&l1path(a.id,s.id)})){
+      document.getElementById('lab1m3').classList.add('done');document.getElementById('lab1m4').classList.remove('lock');
+      if(rt>=1&&l1nodes.filter(n=>n.type==='SWITCH').length>=2){
+        const a=clients.slice(0,2),b=clients.slice(2,4);
+        if(a.length===2&&b.length===2&&a.every(x=>b.every(y=>l1path(x.id,y.id)))){
+          document.getElementById('lab1m4').classList.add('done');stage=4;msg='✓ Tutte le missioni superate. Fermati: quali ruoli hanno assunto gli elementi che hai usato?';
+        }else msg='Missioni 01–03 superate. Per la situazione finale costruisci due gruppi collegati tra loro.';
+      }else msg='Missioni 01–03 superate. Ora prova una situazione con due gruppi di rete.';
+    }else msg='Missioni 01–02 superate. Inserisci il SERVER e rendilo raggiungibile.';
+  }else msg='MISSIONE 01 superata. La rete è cresciuta: trova una soluzione per almeno quattro CLIENT.';
+  const r=document.getElementById('lab1Result');r.className='lab-result '+(stage===4?'ok':'');r.textContent=msg;
+}
+function lab1Hint(){
+  const x=document.getElementById('lab1Hint');x.style.display='block';x.textContent='INDIZIO: non cercare ancora una definizione. Guarda cosa succede quando aumentano i dispositivi e prova una configurazione diversa.';
+}
+document.getElementById('lab1Board')?.addEventListener('click',()=>{l1selected=null;lab1Render()});
+['CLIENT','CLIENT','CLIENT','CLIENT','CLIENT','CLIENT','SERVER','SWITCH','SWITCH','ROUTER'].forEach((t,i)=>{
+  const p=document.createElement('button');p.className='lab-piece';p.innerHTML=L1INFO[t].i+'<br>'+t;p.onclick=()=>lab1Add(t);document.getElementById('lab1Inventory')?.appendChild(p);
+});
+
+/* ---------- LAB 2: DISCOVERY ---------- */
+const LAB2DATA=['192.168.10.15','192.168.10.22','192.168.20.34','192.168.10.31','53124','53125','443','80','TCP','UDP','02','05','ROSSO','11:35','LAB-04','MARCO','PASSWORD','AUR-17'];
+let l2drag=null;
+function initLab2(){
+  const p=document.getElementById('lab2Archive');if(!p)return;
+  LAB2DATA.forEach(v=>{const d=document.createElement('div');d.className='lab-token';d.draggable=true;d.dataset.val=v;d.textContent=v;d.addEventListener('dragstart',()=>l2drag=d);p.appendChild(d)});
+  ['lab2Envelope','lab2EnvelopeB','lab2EnvelopeC'].forEach(id=>{
+    const box=document.getElementById(id);box.addEventListener('dragover',e=>{e.preventDefault();box.classList.add('over')});box.addEventListener('dragleave',()=>box.classList.remove('over'));box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('over');if(!l2drag)return;const c=document.createElement('div');c.className='lab-attached';c.dataset.val=l2drag.dataset.val;c.textContent=l2drag.dataset.val;c.onclick=()=>c.remove();box.appendChild(c)});
+  });
+}
+function l2vals(id){return [...document.querySelectorAll('#'+id+' .lab-attached')].map(x=>x.dataset.val)}
+function lab2Send(){
+  const v=l2vals('lab2Envelope'),r=document.getElementById('lab2Result');
+  if(!v.includes('192.168.10.22')){r.className='lab-result bad';r.innerHTML='Il contenuto è partito, ma non sa dove arrivare.<br><br><b>DOMANDA:</b> quale informazione disponibile potrebbe individuare proprio la macchina di Luca?';return}
+  r.className='lab-result ok';r.innerHTML='✓ Luca ha ricevuto “CIAO”.<br><br><b>Nuovo problema:</b> ora devono viaggiare contemporaneamente due “CIAO” tra le stesse macchine. Come puoi impedire che vengano confuse?';
+}
+function lab2Reset(){document.querySelectorAll('#lab2Envelope .lab-attached').forEach(x=>x.remove());const r=document.getElementById('lab2Result');r.className='lab-result';r.textContent='Prepara una nuova ipotesi.'}
+function lab2TestB(){
+  const v=l2vals('lab2EnvelopeB'),r=document.getElementById('lab2ResultB');
+  if(v.includes('53124')&&v.includes('53125')){r.className='lab-result ok';r.innerHTML='✓ Le due comunicazioni possono essere distinte.<br><br><b>Nuova domanda:</b> come fa il destinatario a sapere come trattare ciò che riceve?'}
+  else {r.className='lab-result bad';r.innerHTML='Le due comunicazioni continuano a essere confuse.<br><br><b>INDIZIO:</b> cerca due valori che possano identificare due conversazioni diverse che avvengono contemporaneamente.'}
+}
+function lab2TestC(){
+  const v=l2vals('lab2EnvelopeC'),r=document.getElementById('lab2ResultC');
+  if(v.includes('02')&&v.includes('05')){r.className='lab-result ok';r.innerHTML='✓ Hai individuato informazioni utili a capire posizione e quantità delle parti.<br><br><b>STOP.</b> Ora il docente può dare un nome tecnico alle scoperte.'}
+  else {r.className='lab-result bad';r.innerHTML='Una parte manca e una è duplicata.<br><br><b>DOMANDA:</b> come potrebbe il destinatario capire la posizione di una parte e quante parti compongono il messaggio?'}
+}
+initLab2();
+
+/* ---------- LAB 3: SCENARIOS ---------- */
+const LAB3=[
+ {name:'Un computer nuovo',q:'Un computer viene collegato alla rete. Non possiede ancora i parametri necessari per comunicare.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'DHCP',trace:'Una richiesta automatica viene inviata alla rete e una risposta fornisce i parametri di configurazione.'},
+ {name:'Un nome senza numero',q:'L’utente conosce server.helios.local, ma la macchina deve trovare l’indirizzo numerico corrispondente.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'DNS',trace:'Viene osservata una richiesta di risoluzione di un nome e una risposta con un indirizzo.'},
+ {name:'Una pagina web',q:'Il browser richiede una risorsa e il server restituisce il contenuto della pagina.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'HTTP',trace:'La comunicazione applicativa è osservabile come richiesta e risposta web.'},
+ {name:'Una pagina protetta',q:'Il browser stabilisce una comunicazione web protetta: il contenuto applicativo non è direttamente leggibile.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'HTTPS',trace:'La comunicazione web è protetta da TLS; il contenuto applicativo non è osservabile come testo in chiaro.'}
+];
+function renderLab3(){
+ const root=document.getElementById('lab3Scenarios');if(!root)return;
+ root.innerHTML=LAB3.map((s,i)=>`<article class="lab-scenario"><div class="section-kicker">SCENARIO ${String(i+1).padStart(2,'0')}</div><h3>${s.name}</h3><p class="lab-muted">${s.q}</p><div class="lab-choices">${s.opts.map(o=>`<button class="lab-choice" onclick="lab3Answer(${i},'${o}',this)">${o}</button>`).join('')}</div><div id="lab3trace${i}" class="lab-trace" style="display:none">${s.trace}</div><button class="btn btn-outline" style="margin-top:10px;padding:8px 10px;font-size:10px" onclick="document.getElementById('lab3trace${i}').style.display='block'">MOSTRA TRACCIA</button></article>`).join('');
+}
+function lab3Answer(i,a,btn){
+ const s=LAB3[i];btn.parentElement.querySelectorAll('.lab-choice').forEach(x=>x.classList.remove('good','bad'));btn.classList.add(a===s.ans?'good':'bad');
+}
+renderLab3();
+
+
 const SUSPECTS=[
 {id:"marco",name:"Marco Ferretti",role:"Sistemista di rete",dept:"IT",ip:"10.0.1.101",age:"41 anni",site:"Sede centrale – Pisa",since:"2016",account:"m.ferretti",access:"Rete interna, server, firewall, backup",accessTags:["Rete interna","Server","Firewall","Backup"],quote:"La stabilità è tutto. Senza una rete affidabile nulla funziona.",bio:"In Helios da oltre dieci anni. Si occupa dell'infrastruttura IT e dei sistemi server. È conosciuto per la competenza tecnica e per la disponibilità a intervenire quando qualcosa smette di funzionare.",alibi:"Ieri sera ero in laboratorio per un intervento sul firewall. Ho i log di accesso al sistema.",motive:"Preoccupato per i recenti tagli al budget IT. Potrebbe voler dimostrare il valore del suo lavoro.",portrait:"photos/marco.jpg",pcap:"pcap/marco-ferretti.pcap"},
 {id:"sara",name:"Sara Colombo",role:"Analista dati – Business Intelligence",dept:"BI",ip:"10.0.1.102",age:"26 anni",site:"Sede centrale – Pisa (Piano 2)",since:"2022",account:"sara.colombo",access:"Database analitici, repository progetti, strumenti BI",accessTags:["Database","Analitica","Repository","BI"],quote:"I dati raccontano sempre una storia. Bisogna solo saperli ascoltare.",bio:"Laureata in Statistica all’Università di Pisa. Entrata in Helios nel 2022 dopo uno stage, si occupa di analisi dei dati aziendali e di supporto alle decisioni strategiche.",alibi:"Stavo lavorando a un’analisi di vendita del primo trimestre. Ho usato alcuni dataset storici e ho consultato la documentazione online.",motive:"Recentemente non è stata inclusa nel nuovo progetto Aurora, nonostante avesse proposto alcune idee. Potrebbe aver voluto accedere ai dati per conto proprio.",portrait:"photos/sara.jpg",pcap:"pcap/sara-colombo.pcap"},
@@ -186,7 +543,7 @@ const SUSPECTS=[
 ]
 function renderSuspects(){document.getElementById("suspect-grid").innerHTML=SUSPECTS.map((s,i)=>`<article class="suspect-wow"><div class="photo-wrap"><img class="portrait" src="${s.portrait}" alt="Ritratto fittizio di ${s.name}"><span class="suspect-id">ID: SC-${String(i+1).padStart(2,'0')}</span><span class="suspect-dept">${s.dept}</span></div><div class="suspect-wow-body"><h3>${s.name}</h3><div class="role">${s.role}</div><div class="quote">“${s.quote}”</div><div class="meta-list"><div class="meta-row"><b>ETÀ</b><span>${s.age}</span></div><div class="meta-row"><b>SEDE</b><span>${s.site}</span></div><div class="meta-row"><b>IP</b><span class="mono">${s.ip}</span></div></div><div class="mini-section"><div class="mini-title">◉ BIOGRAFIA</div><div class="mini-text">${s.bio}</div></div><div class="mini-section"><div class="mini-title">▣ ACCESSI</div><div class="access-tags">${s.accessTags.map(t=>`<span>${t}</span>`).join('')}</div></div><div class="mini-section motive"><div class="mini-title" style="color:var(--danger)">△ POSSIBILE MOVENTE</div><div class="mini-text">${s.motive}</div></div><button class="btn btn-primary pcap-btn" onclick="openSuspect('${s.id}')">◎ INFO</button><div class="pcap-meta">Apri il fascicolo completo</div></div></article>`).join("")}
 function openSuspect(id){const s=SUSPECTS.find(x=>x.id===id);if(!s)return;document.getElementById("suspect-detail-content").innerHTML=`<button class="detail-back" onclick="showPage('suspects')">← Torna alla lista dei sospettati</button><div class="label">FASCICOLO HX-047 · ${s.ip}</div><div class="detail-layout"><main class="detail-main"><div class="detail-hero"><div><img class="detail-photo" src="${s.portrait}" alt="Ritratto fittizio di ${s.name}"><div class="detail-quote">“${s.quote}”</div></div><div><div class="label">IDENTIFICATIVO</div><h1 style="font-size:38px;margin-bottom:4px">${s.name} <span style="font-size:16px;color:var(--danger);border:1px solid var(--danger);padding:5px 8px;border-radius:5px;vertical-align:middle">ID: SC-${String(SUSPECTS.indexOf(s)+1).padStart(2,'0')}</span></h1><p class="subtitle" style="margin-bottom:12px">${s.role}</p><div class="info-table"><div class="info-row"><b>ETÀ</b><span>${s.age}</span></div><div class="info-row"><b>NATA/O A</b><span>${s.id==='sara'?'Pisa':s.id==='marco'?'Livorno':s.id==='luca'?'Firenze':s.id==='elena'?'Lucca':'Milano'}</span></div><div class="info-row"><b>IN HELIOS DAL</b><span>${s.since}</span></div><div class="info-row"><b>RUOLO</b><span>${s.role}</span></div><div class="info-row"><b>REPARTO</b><span>${s.dept}</span></div><div class="info-row"><b>SEDE</b><span>${s.site}</span></div><div class="info-row"><b>INDIRIZZO IP</b><span class="mono">${s.ip}</span></div><div class="info-row"><b>ACCOUNT</b><span class="mono">${s.account}</span></div></div></div></div><div class="detail-section"><h3>◉ Biografia</h3><p>${s.bio}</p></div><div class="detail-section"><h3>◌ Personalità e ruolo</h3><p>${s.role}. ${s.access}. Il profilo deve essere valutato insieme alle tracce di rete: motivazioni e alibi sono elementi di contesto, non prove tecniche.</p></div><div class="detail-section"><h3>△ Possibile movente</h3><p>${s.motive}</p></div></main><aside class="detail-side"><div class="card"><h3>⚿ Accessi e permessi</h3><div class="permission-list">${['Rete aziendale','Server dati','Repository progetti','Sistema di backup','Accesso esterno'].map((x,i)=>`<div class="permission-row"><span>${x}</span><b class="${(s.id==='sara'&&x!=='Sistema di backup')|| (s.id==='marco'&&x!=='Accesso esterno') || (s.id==='luca'&&(x==='Rete aziendale'||x==='Repository progetti')) || (s.id==='elena'&&(x==='Rete aziendale'||x==='Accesso esterno')) || (s.id==='david'&&(x==='Rete aziendale'||x==='Accesso esterno'))?'yes':'no'}">${((s.id==='sara'&&x!=='Sistema di backup')||(s.id==='marco'&&x!=='Accesso esterno')||(s.id==='luca'&&(x==='Rete aziendale'||x==='Repository progetti'))||(s.id==='elena'&&(x==='Rete aziendale'||x==='Accesso esterno'))||(s.id==='david'&&(x==='Rete aziendale'||x==='Accesso esterno'))) ? 'Sì':'No'}</b></div>`).join('')}</div></div><div class="card"><h3>◷ Ultimi accessi (estratto log)</h3><div class="log-list"><div class="log-row"><b>14/04 08:12</b><span>Login riuscito</span></div><div class="log-row"><b>14/04 09:03</b><span>Accesso a risorse interne</span></div><div class="log-row"><b>14/04 09:17</b><span>Attività di rete rilevata</span></div><div class="log-row"><b>14/04 09:25</b><span>Logout / fine sessione</span></div></div></div><div class="card"><h3>♙ Alibi dichiarato</h3><p class="detail"><em>“${s.alibi}”</em></p><div class="pcap-meta" style="text-align:left;margin-top:8px">Dichiarazione acquisita dal CISO</div></div><div class="pcap-box"><h3>↓ FILE PCAP</h3><p>Qui trovi la cattura di rete associata a ${s.name}. Scaricala e aprila con Wireshark.</p><a href="${s.pcap}" download class="btn pcap-big">↓ SCARICA PCAP</a><div class="pcap-meta">${s.pcap.split('/').pop()} · ANALISI RISERVATA</div></div><div class="detail-note">ⓘ <strong>Ricorda:</strong> il profilo non contiene la risposta. Il compito dell'indagine è verificare se le tracce di rete confermano o smentiscono ciò che leggi qui.</div></aside></div>`;showPage('suspect-detail')}
-function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));const page=document.getElementById("page-"+id);if(!page)return;page.classList.add("active");document.querySelectorAll(".nav-links button").forEach(b=>b.classList.remove("active"));const label=id==="guide"?"wireshark":id==="submit"?"verdetto":id==="admin"?"admin":(id==="suspects"||id==="suspect-detail")?"sospettati":"briefing";[...document.querySelectorAll(".nav-links button")].find(b=>b.textContent.toLowerCase().includes(label))?.classList.add("active");scrollTo(0,0)}
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));const page=document.getElementById("page-"+id);if(!page)return;page.classList.add("active");document.querySelectorAll(".nav-links button").forEach(b=>b.classList.remove("active"));const label=id==="guide"?"wireshark":id==="submit"?"verdetto":id==="admin"?"admin":id==="labs"?"laboratori":(id==="suspects"||id==="suspect-detail")?"sospettati":"briefing";[...document.querySelectorAll(".nav-links button")].find(b=>b.textContent.toLowerCase().includes(label))?.classList.add("active");scrollTo(0,0)}
 function scoreLocal(suspect,how,proof){let method=0,evidence=0,technical=0;const h=(how+" "+proof).toLowerCase();if(/dns/.test(h))technical+=4;if(/http/.test(h))technical+=4;if(/post/.test(h))technical+=3;if(/ip|203\.0\.113\.42/.test(h))technical+=4;if(/aurora|report\.pdf/.test(h))evidence+=8;if(/drop\.filebin|203\.0\.113\.42/.test(h))evidence+=8;if(/post|upload|esfil/.test(h))evidence+=5;if(/sequenza|prima|dopo|dns.*post|post.*dns/.test(h))method+=8;if(/server.*esterno|esterno.*server/.test(h))method+=6;if(/http.*non cif|non cif.*http|porta 80/.test(h))technical+=4;return{method:Math.min(20,method),evidence:Math.min(25,evidence),technical:Math.min(15,technical)}}
 async function submitVerdict(){const data={case_id:window.BLACKOUT_CONFIG?.CASE_ID||"HX-047",team:document.getElementById("team-name").value.trim(),analyst1:document.getElementById("analysts").value.trim(),assigned_pcap:document.getElementById("assigned").value,suspect:document.getElementById("who").value,how:document.getElementById("how").value.trim(),proof:document.getElementById("proof").value.trim(),confidence:document.getElementById("confidence").value};if(!data.team||!data.suspect||!data.how||!data.proof){alert("Compila tutti i campi del rapporto.");return}const sc=scoreLocal(data.suspect,data.how,data.proof);data.method_score=sc.method;data.evidence_score=sc.evidence;data.technical_score=sc.technical;data.total_score=(data.suspect==="sara"?40:0)+sc.method+sc.evidence+sc.technical;const status=document.getElementById("submit-status");status.innerHTML="<span class='pill'>INVIO IN CORSO...</span>";try{const url=window.BLACKOUT_CONFIG?.SUBMIT_ENDPOINT;if(!url)throw new Error("endpoint_missing");const r=await fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(data)});const j=await r.json();if(!j.ok)throw new Error(j.error||"server");status.innerHTML="";document.getElementById("success-panel").classList.add("open");document.querySelector("#page-submit .btn-primary").disabled=true}catch(e){status.innerHTML=`<div class="note" style="border-color:var(--amber)">⚠ Endpoint non configurato o non raggiungibile. Il rapporto non è stato perso: <button class="btn btn-outline" style="margin-top:10px" onclick='downloadBackup(${JSON.stringify(data)})'>SCARICA BACKUP JSON</button><br><small>Configura SUBMIT_ENDPOINT in config.js per la raccolta centralizzata.</small></div>`}}
 function downloadBackup(data){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));a.download="BLACKOUT_"+data.team.replace(/[^a-z0-9]+/gi,"_")+".json";a.click()}
