@@ -75,3 +75,7 @@ CLIENT e SERVER hanno al massimo un collegamento diretto; SWITCH e ROUTER posson
 ### Revisione pedagogica LAB 1 e LAB 3
 LAB 1: le missioni descrivono i problemi funzionali senza anticipare il nome del componente (molti dispositivi, risorsa condivisa, reti separate).
 LAB 3: non vengono più proposti i nomi DHCP/DNS/HTTP/HTTPS come opzioni. Gli studenti scelgono comportamenti/funzioni, osservano una traccia e arrivano al significato; il docente introduce il nome tecnico solo dopo.
+
+
+### Correzione v6
+Risolto un errore JavaScript nel LAB 1 che impediva l'inizializzazione dell'intero sito. Il menu e tutte le pagine tornano a essere caricati correttamente.

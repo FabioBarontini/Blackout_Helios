@@ -484,6 +484,7 @@ function lab1Render(){
         l1selected=null;
       }else l1selected=n.id;
       lab1Render();
+    });
     d.addEventListener('dblclick',e=>{
       e.stopPropagation();
       l1nodes=l1nodes.filter(x=>x.id!==n.id);
