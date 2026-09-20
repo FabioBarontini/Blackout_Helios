@@ -22,7 +22,7 @@
   const client=sbLib.createClient(cfg.SUPABASE_URL,apiKey);
   window.BLACKOUT_DB=client;
   window.BLACKOUT_SUPABASE_READY=true;
-  let currentUser=null,currentTeam=null,currentMembers=[],progress={},unlockCode='';
+  let currentUser=null,currentTeam=null,currentMembers=[],progress={},unlockCode='',verdictUnlocked=false;
   let adminRows=[];
   let lab3Correct=new Set();
   const pendingKey='blackout_pending_team';
@@ -122,7 +122,7 @@
   function updateTeamUI(){
     const logged=!!currentTeam;
     ['navBriefing','navLabs','navSuspects','navGuide'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=logged?'inline-flex':'none'});
-    const v=document.getElementById('navVerdict');if(v)v.style.display=logged&&allLabs()?'inline-flex':'none';
+    const v=document.getElementById('navVerdict');if(v)v.style.display=logged?'inline-flex':'none';
     const admin=document.getElementById('navAdmin');if(admin)admin.style.display='inline-flex';
     const login=document.getElementById('navLogin'),logout=document.getElementById('navLogout'),badge=document.getElementById('teamBadge');
     if(login)login.style.display=logged?'none':'inline-flex';
@@ -134,7 +134,7 @@
     const unlock=document.getElementById('labUnlock');
     if(unlock){unlock.classList.toggle('open',logged&&allLabs());const code=document.getElementById('unlockCode');if(code)code.textContent=unlockCode||'CODICE NON CONFIGURATO';}
     const vs=document.getElementById('verdictTeamSummary');if(vs&&logged)vs.innerHTML='<strong>'+esc(currentTeam.name)+'</strong><div class="member-list">'+currentMembers.map(m=>'<span>'+esc(m.name)+'</span>').join('')+'</div>';
-    const lock=document.getElementById('verdictLocked'),wrap=document.getElementById('verdictFormWrap');if(lock&&wrap){lock.style.display=logged&&allLabs()?'none':'block';wrap.style.display=logged&&allLabs()?'grid':'none'}
+    const lock=document.getElementById('verdictLocked'),wrap=document.getElementById('verdictFormWrap');if(lock&&wrap){lock.style.display=logged&&verdictUnlocked?'none':'block';wrap.style.display=logged&&verdictUnlocked?'grid':'none'}
     updateFinishControls();
   }
 
@@ -189,12 +189,12 @@
   }
   window.registerTeam=registerTeam;
 
-  window.logoutTeam=async function(){await client.auth.signOut();currentUser=null;currentTeam=null;currentMembers=[];progress={};lab3Correct.clear();updateTeamUI();showPage('auth')};
+  window.logoutTeam=async function(){await client.auth.signOut();currentUser=null;currentTeam=null;currentMembers=[];progress={};unlockCode='';verdictUnlocked=false;lab3Correct.clear();updateTeamUI();showPage('auth')};
 
   const originalShow=window.showPage;
   window.showPage=function(id){
     if(['briefing','labs','suspects','suspect-detail','guide'].includes(id)&&!currentTeam){originalShow('auth');return}
-    if(id==='submit'&&(!currentTeam||!allLabs())){originalShow(currentTeam?'labs':'auth');return}
+    if(id==='submit'&&!currentTeam){originalShow('auth');return}
     originalShow(id);
     if(id==='labs')updateTeamUI();
     if(id==='submit')updateTeamUI();
@@ -296,7 +296,7 @@
   }
   client.auth.onAuthStateChange((event,session)=>{
     currentUser=session?.user||null;
-    if(event==='SIGNED_OUT'){currentTeam=null;currentMembers=[];progress={};lab3Correct.clear();updateTeamUI();showPage('auth');}
+    if(event==='SIGNED_OUT'){currentTeam=null;currentMembers=[];progress={};unlockCode='';verdictUnlocked=false;lab3Correct.clear();updateTeamUI();showPage('auth');}
     else if(session&&event==='SIGNED_IN'){setTimeout(async()=>{try{const loaded=await loadTeam(session.user);updateTeamUI();if(loaded.team)showPage('labs');else if(loaded.profile?.role==='admin')showPage('admin');}catch(e){console.warn(e)}},0);}
   });
   init();
