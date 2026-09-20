@@ -82,6 +82,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 .lab-inventory{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .lab-piece{min-height:78px;background:#0d2029;border:1px solid #365965;border-radius:10px;color:#e2e8f0;display:grid;place-content:center;text-align:center;font:800 11px monospace;cursor:pointer;user-select:none}
 .lab-piece:hover{border-color:#38bdf8;transform:translateY(-2px)}
+.lab-piece[draggable="true"]{cursor:grab}.lab-piece[draggable="true"]:active{cursor:grabbing}
 .lab-board{position:relative;min-height:500px;background-image:linear-gradient(#ffffff07 1px,transparent 1px),linear-gradient(90deg,#ffffff07 1px,transparent 1px);background-size:34px 34px;border:1px solid #315663;border-radius:10px;overflow:hidden}
 .lab-board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .lab-node{position:absolute;width:105px;min-height:72px;transform:translate(-50%,-50%);background:#10242d;border:1px solid #426873;border-radius:12px;display:grid;place-items:center;text-align:center;cursor:grab;user-select:none;z-index:2;box-shadow:0 8px 25px #0008}
@@ -387,13 +388,16 @@ function openLabTab(id){
 }
 
 /* ---------- LAB 1: NETWORK BUILDER ---------- */
-const L1INFO={CLIENT:{i:'💻',c:''},SERVER:{i:'🖥️',c:''},SWITCH:{i:'🔀',c:''},ROUTER:{i:'🌐',c:''}};
-let l1nodes=[],l1links=[],l1count=0,l1selected=null,l1drag=null,l1offset={x:0,y:0};
+const L1INFO={CLIENT:{i:'💻'},SERVER:{i:'🖥️'},SWITCH:{i:'🔀'},ROUTER:{i:'🌐'}};
+let l1nodes=[],l1links=[],l1count=0,l1selected=null,l1drag=null,l1offset={x:0,y:0},l1DraggedType=null;
 
-function lab1Add(type){
-  const id='N'+(++l1count);
+function lab1Add(type,x=null,y=null){
+  const board=document.getElementById('lab1Board');
+  const r=board.getBoundingClientRect();
   const col=l1nodes.length%4,row=Math.floor(l1nodes.length/4);
-  l1nodes.push({id,type,x:110+col*190,y:95+row*145});
+  const nx=x===null?110+col*190:x, ny=y===null?95+row*145:y;
+  const id='N'+(++l1count);
+  l1nodes.push({id,type,x:Math.max(55,Math.min(r.width-55,nx)),y:Math.max(45,Math.min(r.height-45,ny))});
   lab1Render();
 }
 function l1node(id){return l1nodes.find(n=>n.id===id)}
@@ -409,29 +413,46 @@ function l1path(a,b){
   }
   return false;
 }
-function l1Render(){
-  const board=document.getElementById('lab1Board'), nodes=document.getElementById('lab1Nodes'), svg=document.getElementById('lab1Lines');
-  if(!board)return;
-  const w=board.clientWidth,h=board.clientHeight; svg.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  svg.innerHTML=''; nodes.innerHTML='';
+function l1UpdateLines(){
+  const board=document.getElementById('lab1Board'),svg=document.getElementById('lab1Lines');
+  if(!board||!svg)return;
+  const w=board.clientWidth,h=board.clientHeight;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.innerHTML='';
   l1links.forEach(e=>{
     const a=l1node(e.a),b=l1node(e.b);if(!a||!b)return;
     const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);line.setAttribute('class','lab-line');svg.appendChild(line);
+    line.setAttribute('x1',a.x);line.setAttribute('y1',a.y);
+    line.setAttribute('x2',b.x);line.setAttribute('y2',b.y);
+    line.setAttribute('class','lab-line');svg.appendChild(line);
   });
+}
+function lab1Render(){
+  const board=document.getElementById('lab1Board'),nodes=document.getElementById('lab1Nodes');
+  if(!board)return;
+  nodes.innerHTML='';
   l1nodes.forEach(n=>{
-    const d=document.createElement('div');d.className='lab-node'+(l1selected===n.id?' sel':'');
+    const d=document.createElement('div');
+    d.className='lab-node'+(l1selected===n.id?' sel':'');
     d.style.left=n.x+'px';d.style.top=n.y+'px';d.dataset.id=n.id;
     d.innerHTML=`<div><div class="ico">${L1INFO[n.type].i}</div><div class="nm">${n.type}</div><div class="nid">${n.id}</div></div>`;
+
     d.addEventListener('pointerdown',e=>{
-      e.preventDefault();l1drag=n;const r=board.getBoundingClientRect();l1offset.x=e.clientX-r.left-n.x;l1offset.y=e.clientY-r.top-n.y;
+      e.preventDefault();e.stopPropagation();
+      l1drag=n;
+      const r=board.getBoundingClientRect();
+      l1offset.x=e.clientX-r.left-n.x;l1offset.y=e.clientY-r.top-n.y;
       d.setPointerCapture?.(e.pointerId);
     });
     d.addEventListener('pointermove',e=>{
-      if(l1drag!==n)return;const r=board.getBoundingClientRect();
-      n.x=Math.max(55,Math.min(r.width-55,e.clientX-r.left-l1offset.x));n.y=Math.max(45,Math.min(r.height-45,e.clientY-r.top-l1offset.y));lab1Render();
+      if(l1drag!==n)return;
+      const r=board.getBoundingClientRect();
+      n.x=Math.max(55,Math.min(r.width-55,e.clientX-r.left-l1offset.x));
+      n.y=Math.max(45,Math.min(r.height-45,e.clientY-r.top-l1offset.y));
+      // IMPORTANT: do not rebuild the DOM while dragging.
+      d.style.left=n.x+'px';d.style.top=n.y+'px';
+      l1UpdateLines();
     });
-    d.addEventListener('pointerup',()=>l1drag=null);
+    d.addEventListener('pointerup',()=>{l1drag=null});
+    d.addEventListener('pointercancel',()=>{l1drag=null});
     d.addEventListener('click',e=>{
       e.stopPropagation();
       if(l1selected&&l1selected!==n.id){
@@ -441,11 +462,14 @@ function l1Render(){
       lab1Render();
     });
     d.addEventListener('dblclick',e=>{
-      e.stopPropagation();l1nodes=l1nodes.filter(x=>x.id!==n.id);l1links=l1links.filter(x=>x.a!==n.id&&x.b!==n.id);l1selected=null;lab1Render();
+      e.stopPropagation();
+      l1nodes=l1nodes.filter(x=>x.id!==n.id);
+      l1links=l1links.filter(x=>x.a!==n.id&&x.b!==n.id);
+      l1selected=null;lab1Render();
     });
     nodes.appendChild(d);
   });
-  lab1UpdateSelects();
+  l1UpdateLines();lab1UpdateSelects();
 }
 function lab1UpdateSelects(){
   ['lab1From','lab1To'].forEach(id=>{
@@ -454,39 +478,79 @@ function lab1UpdateSelects(){
     if(l1nodes.some(n=>n.id===old))s.value=old;
   });
 }
-function lab1Clear(){l1nodes=[];l1links=[];l1selected=null;lab1Render();document.getElementById('lab1Result').className='lab-result';document.getElementById('lab1Result').textContent='Tavolo svuotato.'}
+function lab1Clear(){
+  l1nodes=[];l1links=[];l1selected=null;
+  lab1Render();
+  document.getElementById('lab1Result').className='lab-result';
+  document.getElementById('lab1Result').textContent='Tavolo svuotato.';
+}
 function lab1Send(){
   const a=document.getElementById('lab1From').value,b=document.getElementById('lab1To').value,r=document.getElementById('lab1Result');
   if(!a||!b||a===b){r.className='lab-result bad';r.textContent='Scegli due elementi diversi.';return}
-  const ok=l1path(a,b);r.className='lab-result '+(ok?'ok':'bad');r.textContent=ok?'✓ COMUNICAZIONE RIUSCITA — esiste un percorso tra i due elementi.':'✗ COMUNICAZIONE FALLITA — non esiste un percorso tra i due elementi.';
+  const ok=l1path(a,b);
+  r.className='lab-result '+(ok?'ok':'bad');
+  r.textContent=ok?'✓ COMUNICAZIONE RIUSCITA — esiste un percorso tra i due elementi.':'✗ COMUNICAZIONE FALLITA — non esiste un percorso tra i due elementi.';
 }
 function lab1Verify(){
   const clients=l1nodes.filter(n=>n.type==='CLIENT'),sw=l1nodes.filter(n=>n.type==='SWITCH').length,sv=l1nodes.filter(n=>n.type==='SERVER').length,rt=l1nodes.filter(n=>n.type==='ROUTER').length;
-  let stage=1,ok=false,msg='';
-  if(clients.length>=3 && clients.slice(0,3).every(a=>clients.slice(0,3).some(b=>a.id!==b.id&&l1path(a.id,b.id)))){stage=1;ok=true;msg='MISSIONE 01 SUPERATA.'}
-  else {document.getElementById('lab1Result').className='lab-result bad';document.getElementById('lab1Result').textContent='MISSIONE 01: almeno tre CLIENT devono poter comunicare.';return}
-  document.getElementById('lab1m1').classList.add('done');document.getElementById('lab1m2').classList.remove('lock');
+  let stage=1,msg='';
+  if(clients.length>=3 && clients.slice(0,3).every(a=>clients.slice(0,3).some(b=>a.id!==b.id&&l1path(a.id,b.id)))){
+    document.getElementById('lab1m1').classList.add('done');document.getElementById('lab1m2').classList.remove('lock');
+  }else{
+    const r=document.getElementById('lab1Result');r.className='lab-result bad';r.textContent='MISSIONE 01: almeno tre CLIENT devono poter comunicare.';return;
+  }
   if(clients.length>=4&&sw>=1&&clients.slice(0,4).every(a=>clients.slice(0,4).some(b=>a.id!==b.id&&l1path(a.id,b.id)))){
     document.getElementById('lab1m2').classList.add('done');document.getElementById('lab1m3').classList.remove('lock');
-    if(sv>=1&&clients.slice(0,4).every(a=>{const s=l1nodes.find(n=>n.type==='SERVER');return s&&l1path(a.id,s.id)})){
-      document.getElementById('lab1m3').classList.add('done');document.getElementById('lab1m4').classList.remove('lock');
-      if(rt>=1&&l1nodes.filter(n=>n.type==='SWITCH').length>=2){
-        const a=clients.slice(0,2),b=clients.slice(2,4);
-        if(a.length===2&&b.length===2&&a.every(x=>b.every(y=>l1path(x.id,y.id)))){
-          document.getElementById('lab1m4').classList.add('done');stage=4;msg='✓ Tutte le missioni superate. Fermati: quali ruoli hanno assunto gli elementi che hai usato?';
-        }else msg='Missioni 01–03 superate. Per la situazione finale costruisci due gruppi collegati tra loro.';
-      }else msg='Missioni 01–03 superate. Ora prova una situazione con due gruppi di rete.';
-    }else msg='Missioni 01–02 superate. Inserisci il SERVER e rendilo raggiungibile.';
-  }else msg='MISSIONE 01 superata. La rete è cresciuta: trova una soluzione per almeno quattro CLIENT.';
-  const r=document.getElementById('lab1Result');r.className='lab-result '+(stage===4?'ok':'');r.textContent=msg;
+  }else{
+    const r=document.getElementById('lab1Result');r.className='lab-result';r.textContent='MISSIONE 01 superata. Ora fai crescere la rete: almeno quattro CLIENT e uno SWITCH.';return;
+  }
+  const server=l1nodes.find(n=>n.type==='SERVER');
+  if(server&&clients.slice(0,4).every(a=>l1path(a.id,server.id))){
+    document.getElementById('lab1m3').classList.add('done');document.getElementById('lab1m4').classList.remove('lock');
+  }else{
+    const r=document.getElementById('lab1Result');r.className='lab-result';r.textContent='MISSIONE 02 superata. Inserisci il SERVER e rendilo raggiungibile.';return;
+  }
+  if(rt>=1&&l1nodes.filter(n=>n.type==='SWITCH').length>=2){
+    const a=clients.slice(0,2),b=clients.slice(2,4);
+    if(a.length===2&&b.length===2&&a.every(x=>b.every(y=>l1path(x.id,y.id)))){
+      document.getElementById('lab1m4').classList.add('done');stage=4;
+    }
+  }
+  const r=document.getElementById('lab1Result');
+  r.className='lab-result '+(stage===4?'ok':'');
+  r.textContent=stage===4?'✓ Tutte le missioni superate. Fermati: quali ruoli hanno assunto gli elementi che hai usato?':'Missioni 01–03 superate. Ora prova a costruire due gruppi collegati tra loro.';
 }
 function lab1Hint(){
-  const x=document.getElementById('lab1Hint');x.style.display='block';x.textContent='INDIZIO: non cercare ancora una definizione. Guarda cosa succede quando aumentano i dispositivi e prova una configurazione diversa.';
+  const x=document.getElementById('lab1Hint');x.style.display='block';
+  x.textContent='INDIZIO: non cercare ancora una definizione. Guarda cosa succede quando aumentano i dispositivi e prova configurazioni diverse.';
 }
-document.getElementById('lab1Board')?.addEventListener('click',()=>{l1selected=null;lab1Render()});
-['CLIENT','CLIENT','CLIENT','CLIENT','CLIENT','CLIENT','SERVER','SWITCH','SWITCH','ROUTER'].forEach((t,i)=>{
-  const p=document.createElement('button');p.className='lab-piece';p.innerHTML=L1INFO[t].i+'<br>'+t;p.onclick=()=>lab1Add(t);document.getElementById('lab1Inventory')?.appendChild(p);
+
+const inventoryTypes=['CLIENT','CLIENT','CLIENT','CLIENT','CLIENT','CLIENT','SERVER','SWITCH','SWITCH','ROUTER'];
+inventoryTypes.forEach((t)=>{
+  const p=document.createElement('button');
+  p.className='lab-piece';p.draggable=true;p.innerHTML=L1INFO[t].i+'<br>'+t;
+  // Click still works, but drag-and-drop is now the primary interaction.
+  p.addEventListener('click',()=>lab1Add(t));
+  p.addEventListener('dragstart',e=>{l1DraggedType=t;e.dataTransfer.effectAllowed='copy';e.dataTransfer.setData('text/plain',t)});
+  p.addEventListener('dragend',()=>{l1DraggedType=null});
+  document.getElementById('lab1Inventory')?.appendChild(p);
 });
+
+const lab1BoardEl=document.getElementById('lab1Board');
+lab1BoardEl?.addEventListener('dragover',e=>{
+  if(l1DraggedType){e.preventDefault();e.dataTransfer.dropEffect='copy';lab1BoardEl.style.borderColor='#4de5ff'}
+});
+lab1BoardEl?.addEventListener('dragleave',()=>{lab1BoardEl.style.borderColor=''});
+lab1BoardEl?.addEventListener('drop',e=>{
+  e.preventDefault();lab1BoardEl.style.borderColor='';
+  const type=e.dataTransfer.getData('text/plain')||l1DraggedType;
+  if(!type)return;
+  const r=lab1BoardEl.getBoundingClientRect();
+  lab1Add(type,e.clientX-r.left,e.clientY-r.top);
+  l1DraggedType=null;
+});
+lab1BoardEl?.addEventListener('click',()=>{l1selected=null;lab1Render()});
+lab1Render();
 
 /* ---------- LAB 2: DISCOVERY ---------- */
 const LAB2DATA=['192.168.10.15','192.168.10.22','192.168.20.34','192.168.10.31','53124','53125','443','80','TCP','UDP','02','05','ROSSO','11:35','LAB-04','MARCO','PASSWORD','AUR-17'];

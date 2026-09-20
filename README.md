@@ -59,3 +59,7 @@ La versione integrata aggiunge una voce **Laboratori** al sito principale con tr
 3. **Invisible Services** — quattro situazioni-problema con verifica su DHCP, DNS, HTTP e HTTPS.
 
 I laboratori non mostrano nella prima fase i nomi dei campi tecnici del messaggio.
+
+
+### Correzione Laboratorio 1
+Gli elementi dell'inventario sono ora realmente trascinabili nel tavolo di lavoro. I nodi già posizionati possono essere trascinati senza interrompere il movimento; i collegamenti restano aggiornati durante lo spostamento. Il click sull'inventario resta disponibile come alternativa.
