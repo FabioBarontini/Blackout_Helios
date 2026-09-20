@@ -87,7 +87,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 .lab-board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .lab-node{position:absolute;width:105px;min-height:72px;transform:translate(-50%,-50%);background:#10242d;border:1px solid #426873;border-radius:12px;display:grid;place-items:center;text-align:center;cursor:grab;user-select:none;z-index:2;box-shadow:0 8px 25px #0008}
 .lab-node.sel{border:2px solid #4de5ff;box-shadow:0 0 0 3px #4de5ff22}
-.lab-node .ico{font-size:25px}.lab-node .nm{font:800 10px monospace;margin-top:3px}.lab-node .nid{font:9px monospace;color:#78969e}
+.lab-node .ico{font-size:25px}.lab-node .nm{font:800 10px monospace;margin-top:3px}.lab-node .nid{font:9px monospace;color:#78969e}.lab-node.endpoint{border-color:#365965}.lab-node.endpoint .nid{color:#fbbf24}
 .lab-line{stroke:#4de5ff;stroke-width:3;opacity:.7}
 .lab-tests{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
 .lab-test{padding:11px;border:1px solid #164e63;border-radius:7px;background:#06111c;min-height:105px}
@@ -204,7 +204,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 
         <div class="lab-card">
           <h3>TAVOLO DI LAVORO</h3>
-          <p class="lab-muted">Trascina i nodi. Per collegare due elementi, seleziona prima uno e poi l'altro.</p>
+          <p class="lab-muted">Trascina i nodi. Per collegare due elementi, seleziona prima uno e poi l'altro. <b>CLIENT e SERVER possono avere un solo collegamento diretto; SWITCH e ROUTER possono averne più di uno.</b> Per correggere un errore, clicca sul collegamento e poi su “ELIMINA COLLEGAMENTO” oppure premi CANC.</p>
           <div class="lab-board" id="lab1Board">
             <svg id="lab1Lines"></svg>
             <div id="lab1Nodes"></div>
@@ -222,9 +222,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 
       <div class="lab-tests">
         <div class="lab-test" id="lab1m1"><b>MISSIONE 01</b><strong>Tre computer</strong><span>Almeno tre CLIENT devono poter comunicare.</span></div>
-        <div class="lab-test lock" id="lab1m2"><b>MISSIONE 02</b><strong>La rete cresce</strong><span>Quattro CLIENT e uno SWITCH devono partecipare alla comunicazione.</span></div>
-        <div class="lab-test lock" id="lab1m3"><b>MISSIONE 03</b><strong>Arriva il SERVER</strong><span>Il SERVER deve essere raggiungibile.</span></div>
-        <div class="lab-test lock" id="lab1m4"><b>MISSIONE 04</b><strong>Due reti</strong><span>Due gruppi devono comunicare attraverso una nuova situazione.</span></div>
+        <div class="lab-test lock" id="lab1m2"><b>MISSIONE 02</b><strong>Molti dispositivi</strong><span>Collega quattro computer senza dover creare un collegamento diretto tra ogni coppia.</span></div>
+        <div class="lab-test lock" id="lab1m3"><b>MISSIONE 03</b><strong>Una risorsa condivisa</strong><span>Una macchina deve mettere a disposizione una risorsa che gli altri possano raggiungere.</span></div>
+        <div class="lab-test lock" id="lab1m4"><b>MISSIONE 04</b><strong>Due mondi separati</strong><span>Due gruppi di computer appartengono a reti diverse: trova un modo perché possano comunicare.</span></div>
       </div>
     </section>
 
@@ -296,9 +296,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
     <!-- LAB 3 -->
     <section id="lab3" class="lab-panel">
       <div class="lab-mission">
-        <b>MISSIONE 03</b><br>
-        Quattro situazioni. Quattro problemi diversi. Prima formula una spiegazione, poi guarda la traccia e verifica.
-        <strong>Non partire dal nome del protocollo.</strong>
+        <b>MISSIONE 03 · HELIOS SERVICE DESK</b><br>
+        Quattro problemi reali della rete. In questa prova <strong>non conosci ancora i nomi tecnici delle soluzioni</strong>.
+        Il tuo compito è capire <strong>che cosa deve succedere</strong> perché ogni situazione possa funzionare.
+        Scegli un comportamento, prova la simulazione, osserva la traccia e modifica la tua ipotesi.
       </div>
       <div class="lab-scenarios" id="lab3Scenarios"></div>
     </section>
@@ -425,13 +426,24 @@ function l1UpdateLines(){
     line.setAttribute('class','lab-line');svg.appendChild(line);
   });
 }
+function l1Degree(id){
+  return l1links.filter(e=>e.a===id||e.b===id).length;
+}
+function l1CanConnect(id){
+  const n=l1node(id);
+  if(!n)return {ok:false,reason:'Elemento non trovato.'};
+  if((n.type==='CLIENT'||n.type==='SERVER') && l1Degree(id)>=1){
+    return {ok:false,reason:`${n.type} ${id} ha già un collegamento. In questo laboratorio può avere un solo collegamento diretto.`};
+  }
+  return {ok:true};
+}
 function lab1Render(){
   const board=document.getElementById('lab1Board'),nodes=document.getElementById('lab1Nodes');
   if(!board)return;
   nodes.innerHTML='';
   l1nodes.forEach(n=>{
     const d=document.createElement('div');
-    d.className='lab-node'+(l1selected===n.id?' sel':'');
+    d.className='lab-node'+(l1selected===n.id?' sel':'')+((n.type==='CLIENT'||n.type==='SERVER')?' endpoint':'');
     d.style.left=n.x+'px';d.style.top=n.y+'px';d.dataset.id=n.id;
     d.innerHTML=`<div><div class="ico">${L1INFO[n.type].i}</div><div class="nm">${n.type}</div><div class="nid">${n.id}</div></div>`;
 
@@ -455,12 +467,23 @@ function lab1Render(){
     d.addEventListener('pointercancel',()=>{l1drag=null});
     d.addEventListener('click',e=>{
       e.stopPropagation();
+      l1SelectedLink=null;
       if(l1selected&&l1selected!==n.id){
-        if(!l1connected(l1selected,n.id))l1links.push({a:l1selected,b:n.id});
+        if(!l1connected(l1selected,n.id)){
+          const ca=l1CanConnect(l1selected),cb=l1CanConnect(n.id);
+          if(!ca.ok||!cb.ok){
+            const r=document.getElementById('lab1Result');
+            r.className='lab-result bad';
+            r.textContent='✗ '+(ca.ok?cb.reason:ca.reason);
+            l1selected=null;
+            lab1Render();
+            return;
+          }
+          l1links.push({a:l1selected,b:n.id});
+        }
         l1selected=null;
       }else l1selected=n.id;
       lab1Render();
-    });
     d.addEventListener('dblclick',e=>{
       e.stopPropagation();
       l1nodes=l1nodes.filter(x=>x.id!==n.id);
@@ -583,17 +606,89 @@ initLab2();
 
 /* ---------- LAB 3: SCENARIOS ---------- */
 const LAB3=[
- {name:'Un computer nuovo',q:'Un computer viene collegato alla rete. Non possiede ancora i parametri necessari per comunicare.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'DHCP',trace:'Una richiesta automatica viene inviata alla rete e una risposta fornisce i parametri di configurazione.'},
- {name:'Un nome senza numero',q:'L’utente conosce server.helios.local, ma la macchina deve trovare l’indirizzo numerico corrispondente.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'DNS',trace:'Viene osservata una richiesta di risoluzione di un nome e una risposta con un indirizzo.'},
- {name:'Una pagina web',q:'Il browser richiede una risorsa e il server restituisce il contenuto della pagina.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'HTTP',trace:'La comunicazione applicativa è osservabile come richiesta e risposta web.'},
- {name:'Una pagina protetta',q:'Il browser stabilisce una comunicazione web protetta: il contenuto applicativo non è direttamente leggibile.',opts:['DHCP','DNS','HTTP','HTTPS'],ans:'HTTPS',trace:'La comunicazione web è protetta da TLS; il contenuto applicativo non è osservabile come testo in chiaro.'}
+ {
+  name:'01 · IL COMPUTER APPENA COLLEGATO',
+  q:'Un nuovo computer è stato collegato alla rete. L’utente vuole iniziare a lavorare, ma il computer non conosce ancora i parametri necessari per comunicare.',
+  goal:'Che cosa dovrebbe poter fare il computer senza che qualcuno inserisca tutto a mano?',
+  opts:[
+   {id:'a',title:'ASPETTARE UNA RISPOSTA',desc:'Il computer chiede alla rete ciò che gli serve e riceve automaticamente le impostazioni.',good:true},
+   {id:'b',title:'CERCARE UN NOME',desc:'Il computer prova a trasformare un nome scritto dall’utente in un numero.',good:false},
+   {id:'c',title:'APRIRE UNA PAGINA',desc:'Il computer prova subito a richiedere una pagina web.',good:false}
+  ],
+  reveal:'La rete può rispondere a una richiesta automatica fornendo i parametri necessari per iniziare a comunicare.',
+  teacher:'Dopo la scoperta: DHCP — Dynamic Host Configuration Protocol.'
+ },
+ {
+  name:'02 · UN NOME CHE NON BASTA',
+  q:'L’utente scrive “server.helios.local”. Il computer, però, per raggiungere quella macchina ha bisogno di un indirizzo numerico.',
+  goal:'Che cosa deve esistere nella rete per trasformare il nome nell’indirizzo corrispondente?',
+  opts:[
+   {id:'a',title:'UNA RUBRICA',desc:'Un servizio riceve il nome e restituisce l’indirizzo numerico associato.',good:true},
+   {id:'b',title:'UN DISTRIBUTORE',desc:'Un servizio assegna automaticamente i parametri a un nuovo computer.',good:false},
+   {id:'c',title:'UN CANALE PROTETTO',desc:'Un servizio rende illeggibile il contenuto della comunicazione.',good:false}
+  ],
+  reveal:'Esiste un servizio che funziona come una rubrica: nome → indirizzo.',
+  teacher:'Dopo la scoperta: DNS — Domain Name System.'
+ },
+ {
+  name:'03 · CHIEDI UNA RISORSA',
+  q:'Il browser vuole ottenere una pagina dal sito Helios. Il computer deve poter formulare una richiesta comprensibile al servizio web e ricevere una risposta.',
+  goal:'Quale comportamento serve per questo scambio?',
+  opts:[
+   {id:'a',title:'RICHIESTA + RISPOSTA',desc:'Il client formula una richiesta per una risorsa e il servizio web restituisce una risposta.',good:true},
+   {id:'b',title:'ASSEGNAZIONE AUTOMATICA',desc:'La rete assegna i parametri necessari al computer.',good:false},
+   {id:'c',title:'RICERCA DEL NOME',desc:'La rete trasforma un nome in un indirizzo numerico.',good:false}
+  ],
+  reveal:'Il web usa uno scambio strutturato di richieste e risposte per ottenere risorse.',
+  teacher:'Dopo la scoperta: HTTP — Hypertext Transfer Protocol.'
+ },
+ {
+  name:'04 · LA STESSA RISORSA, MA PROTETTA',
+  q:'Il browser deve ottenere una pagina, ma questa volta le informazioni scambiate non devono essere leggibili da chi osserva il traffico.',
+  goal:'Come può avvenire lo stesso tipo di comunicazione web aggiungendo protezione?',
+  opts:[
+   {id:'a',title:'WEB + CANALE PROTETTO',desc:'Lo scambio web avviene dentro una comunicazione protetta.',good:true},
+   {id:'b',title:'WEB SENZA PROTEZIONE',desc:'La richiesta e la risposta restano direttamente osservabili.',good:false},
+   {id:'c',title:'ASSEGNAZIONE AUTOMATICA',desc:'La rete fornisce al computer i parametri iniziali.',good:false}
+  ],
+  reveal:'La comunicazione web può essere protetta usando TLS, mantenendo il modello di richiesta e risposta.',
+  teacher:'Dopo la scoperta: HTTPS — HTTP Secure, cioè HTTP protetto tramite TLS.'
+ }
 ];
+
 function renderLab3(){
  const root=document.getElementById('lab3Scenarios');if(!root)return;
- root.innerHTML=LAB3.map((s,i)=>`<article class="lab-scenario"><div class="section-kicker">SCENARIO ${String(i+1).padStart(2,'0')}</div><h3>${s.name}</h3><p class="lab-muted">${s.q}</p><div class="lab-choices">${s.opts.map(o=>`<button class="lab-choice" onclick="lab3Answer(${i},'${o}',this)">${o}</button>`).join('')}</div><div id="lab3trace${i}" class="lab-trace" style="display:none">${s.trace}</div><button class="btn btn-outline" style="margin-top:10px;padding:8px 10px;font-size:10px" onclick="document.getElementById('lab3trace${i}').style.display='block'">MOSTRA TRACCIA</button></article>`).join('');
+ root.innerHTML=LAB3.map((s,i)=>`
+ <article class="lab-scenario">
+   <div class="section-kicker">SITUAZIONE ${String(i+1).padStart(2,'0')}</div>
+   <h3>${s.name}</h3>
+   <p class="lab-muted">${s.q}</p>
+   <div class="lab-clue"><b>DOMANDA:</b> ${s.goal}</div>
+   <div class="lab-choices">
+     ${s.opts.map((o,j)=>`<button class="lab-choice" onclick="lab3Answer(${i},${j},this)">${o.title}</button>`).join('')}
+   </div>
+   <div class="lab-trace" id="lab3trace${i}" style="display:none"></div>
+   <button class="btn btn-outline" style="margin-top:10px;padding:8px 10px;font-size:10px" onclick="lab3Reveal(${i})">OSSERVA LA TRACCIA</button>
+   <div class="lab-result" id="lab3res${i}" style="margin-top:10px">Fai una scelta.</div>
+ </article>`).join('');
 }
-function lab3Answer(i,a,btn){
- const s=LAB3[i];btn.parentElement.querySelectorAll('.lab-choice').forEach(x=>x.classList.remove('good','bad'));btn.classList.add(a===s.ans?'good':'bad');
+function lab3Answer(i,j,btn){
+ const s=LAB3[i],r=document.getElementById('lab3res'+i);
+ btn.parentElement.querySelectorAll('.lab-choice').forEach(x=>x.classList.remove('good','bad'));
+ const o=s.opts[j];
+ btn.classList.add(o.good?'good':'bad');
+ if(o.good){
+   r.className='lab-result ok';
+   r.innerHTML='✓ Il comportamento scelto risolve il problema.<br><br><b>Ma non fermarti al nome:</b> prova a spiegare con parole tue quale utilità svolge.';
+ }else{
+   r.className='lab-result bad';
+   r.innerHTML='✗ Questa soluzione svolge un’altra funzione.<br><br><b>Chiediti:</b> che cosa manca esattamente in questa situazione?';
+ }
+}
+function lab3Reveal(i){
+ const s=LAB3[i],box=document.getElementById('lab3trace'+i);
+ box.style.display='block';
+ box.innerHTML=`<b>TRACCIA OSSERVATA</b><br>${s.reveal}<br><br><span style="color:#67e8f9">Il nome tecnico viene introdotto dal docente dopo la discussione.</span>`;
 }
 renderLab3();
 

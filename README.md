@@ -67,3 +67,11 @@ Gli elementi dell'inventario sono ora realmente trascinabili nel tavolo di lavor
 
 ### Correzione collegamenti LAB 1
 I collegamenti possono essere selezionati cliccandoci sopra. Un collegamento selezionato può essere eliminato con il pulsante **ELIMINA COLLEGAMENTO** oppure con il tasto **CANC**. La selezione usa una zona cliccabile più ampia della linea visibile per facilitare l'uso in classe.
+
+
+### Regola collegamenti LAB 1
+CLIENT e SERVER hanno al massimo un collegamento diretto; SWITCH e ROUTER possono avere più collegamenti. Il controllo impedisce di creare connessioni aggiuntive non valide.
+
+### Revisione pedagogica LAB 1 e LAB 3
+LAB 1: le missioni descrivono i problemi funzionali senza anticipare il nome del componente (molti dispositivi, risorsa condivisa, reti separate).
+LAB 3: non vengono più proposti i nomi DHCP/DNS/HTTP/HTTPS come opzioni. Gli studenti scelgono comportamenti/funzioni, osservano una traccia e arrivano al significato; il docente introduce il nome tecnico solo dopo.
