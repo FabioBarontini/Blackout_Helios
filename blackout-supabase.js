@@ -27,6 +27,10 @@
   let lab3Correct=new Set();
   const pendingKey='blackout_pending_team';
   const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  function teamAuthEmail(teamName){
+    let h=2166136261; for(const ch of String(teamName).trim()){h^=ch.charCodeAt(0); h=Math.imul(h,16777619);} h>>>=0;
+    return 'team-'+h.toString(36)+'@blackout.local';
+  }
   const status=(id,msg,type='')=>{const e=document.getElementById(id);if(e){e.className='auth-status '+type;e.textContent=msg}};
   const setSaveIndicator=(lab,state,msg)=>{const e=document.getElementById(lab+'Save');if(e){e.className='save-indicator '+state;e.textContent=msg||''}};
 
@@ -135,9 +139,10 @@
   }
 
   async function loginTeam(){
-    const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;
-    if(!email||!password){status('authStatus','Inserisci email e password.','bad');return}
-    status('authStatus','Autenticazione Helios in corso…');
+    const teamName=document.getElementById('loginTeam').value.trim(),password=document.getElementById('loginPassword').value;
+    if(!teamName||!password){status('authStatus','Inserisci nome squadra e password.','bad');return}
+    const email=teamAuthEmail(teamName);
+    status('authStatus','Accesso alla rete Helios…');
     const {data,error}=await client.auth.signInWithPassword({email,password});
     if(error){status('authStatus',error.message,'bad');return}
     try{
@@ -155,14 +160,15 @@
   async function registerTeam(){
     const teamName=document.getElementById('registerTeam').value.trim();
     const members=document.getElementById('registerMembers').value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);
-    const email=document.getElementById('registerEmail').value.trim(),password=document.getElementById('registerPassword').value;
-    if(!teamName||members.length<1||!email||password.length<6){status('authStatus','Compila nome squadra, almeno un membro, email e password (minimo 6 caratteri).','bad');return}
+    const password=document.getElementById('registerPassword').value;
+    if(!teamName||members.length<1||password.length<6){status('authStatus','Compila nome squadra, almeno un membro e una password di almeno 6 caratteri.','bad');return}
     localStorage.setItem(pendingKey,JSON.stringify({teamName,members}));
-    status('authStatus','Creazione account Helios…');
+    status('authStatus','Attivazione della squadra Helios…');
+    const email=teamAuthEmail(teamName);
     const {data,error}=await client.auth.signUp({email,password});
     if(error){
       let msg=error.message||'Registrazione non riuscita.';
-      if(/already registered|already exists|user already/i.test(msg)) msg='Questa email è già registrata. Usa un’altra email per la squadra oppure accedi con l’account esistente.';
+      if(/already registered|already exists|user already/i.test(msg)) msg='Questa squadra è già registrata. Usa un altro nome squadra oppure accedi con l’account esistente.';
       status('authStatus',msg,'bad');
       localStorage.removeItem(pendingKey);
       return;
@@ -172,13 +178,13 @@
       try{
         const loaded=await loadTeam(data.user);
         if(!loaded.team) throw new Error('Account creato ma la squadra non è stata creata.');
-        status('authStatus','SQUADRA ATTIVATA ✓ Accesso effettuato.','ok');
+        status('authStatus','');
         showPage('labs');
       }catch(e){
         status('authStatus','Account creato, ma configurazione squadra non completata: '+e.message,'bad');
       }
     } else {
-      status('authStatus','Account creato. Se Supabase richiede la conferma email, confermala e poi torna qui per accedere.','ok');
+      status('authStatus','Registrazione completata. Accedi con nome squadra e password.','ok');
     }
   }
   window.registerTeam=registerTeam;
