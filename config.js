@@ -1,10 +1,8 @@
 // BLACKOUT + SUPABASE configuration
-// Inserisci qui i dati PUBLIC del progetto Supabase.
-// Puoi usare la nuova Publishable Key oppure la vecchia anon key.
-// NON inserire mai una Secret key / service_role nel browser.
+// Publishable key: safe for browser use. NEVER put a Secret/service_role key here.
 window.BLACKOUT_CONFIG = {
-  SUPABASE_URL: "",
-  SUPABASE_PUBLISHABLE_KEY: "",
+  SUPABASE_URL: "https://lalnecxmiijzrlxpxbde.supabase.co",
+  SUPABASE_PUBLISHABLE_KEY: "sb_publishable_KeMNXu01_ZQ53J0sHF0-EA_CCII-WAi",
   SUPABASE_ANON_KEY: "",
   CASE_ID: "HX-047"
 };

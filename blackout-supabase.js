@@ -56,9 +56,12 @@
     const {data:existing}=await client.from('teams').select('*').eq('owner_id',user.id).maybeSingle();
     if(existing){localStorage.removeItem(pendingKey);return existing;}
     const {data:team,error}=await client.from('teams').insert({owner_id:user.id,name:pending.teamName.trim()}).select().single();
-    if(error)throw error;
+    if(error){
+      const msg=error.code==='23505'?'Questo nome di squadra è già utilizzato. Scegline un altro.':(error.message||'Impossibile creare la squadra.');
+      throw new Error(msg);
+    }
     const rows=pending.members.slice(0,8).map((name,i)=>({team_id:team.id,position:i+1,name:name.trim()})).filter(x=>x.name);
-    if(rows.length){const {error:e}=await client.from('team_members').insert(rows);if(e)throw e;}
+    if(rows.length){const {error:e}=await client.from('team_members').insert(rows);if(e){await client.from('teams').delete().eq('id',team.id);throw e;}}
     localStorage.removeItem(pendingKey);
     return team;
   }
@@ -157,9 +160,26 @@
     localStorage.setItem(pendingKey,JSON.stringify({teamName,members}));
     status('authStatus','Creazione account Helios…');
     const {data,error}=await client.auth.signUp({email,password});
-    if(error){status('authStatus',error.message,'bad');return}
-    if(data.session){try{await loadTeam(data.user);status('authStatus','Squadra attivata.','ok');showPage('labs')}catch(e){status('authStatus','Account creato ma impossibile creare la squadra: '+e.message,'bad')}}
-    else status('authStatus','Account creato. Conferma l’email se richiesto, poi accedi nuovamente.','ok');
+    if(error){
+      let msg=error.message||'Registrazione non riuscita.';
+      if(/already registered|already exists|user already/i.test(msg)) msg='Questa email è già registrata. Usa un’altra email per la squadra oppure accedi con l’account esistente.';
+      status('authStatus',msg,'bad');
+      localStorage.removeItem(pendingKey);
+      return;
+    }
+    if(data.session){
+      currentUser=data.user;
+      try{
+        const loaded=await loadTeam(data.user);
+        if(!loaded.team) throw new Error('Account creato ma la squadra non è stata creata.');
+        status('authStatus','SQUADRA ATTIVATA ✓ Accesso effettuato.','ok');
+        showPage('labs');
+      }catch(e){
+        status('authStatus','Account creato, ma configurazione squadra non completata: '+e.message,'bad');
+      }
+    } else {
+      status('authStatus','Account creato. Se Supabase richiede la conferma email, confermala e poi torna qui per accedere.','ok');
+    }
   }
   window.registerTeam=registerTeam;
 
