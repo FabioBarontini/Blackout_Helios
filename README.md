@@ -63,3 +63,7 @@ I laboratori non mostrano nella prima fase i nomi dei campi tecnici del messaggi
 
 ### Correzione Laboratorio 1
 Gli elementi dell'inventario sono ora realmente trascinabili nel tavolo di lavoro. I nodi già posizionati possono essere trascinati senza interrompere il movimento; i collegamenti restano aggiornati durante lo spostamento. Il click sull'inventario resta disponibile come alternativa.
+
+
+### Correzione collegamenti LAB 1
+I collegamenti possono essere selezionati cliccandoci sopra. Un collegamento selezionato può essere eliminato con il pulsante **ELIMINA COLLEGAMENTO** oppure con il tasto **CANC**. La selezione usa una zona cliccabile più ampia della linea visibile per facilitare l'uso in classe.
