@@ -22,7 +22,7 @@
   const client=sbLib.createClient(cfg.SUPABASE_URL,apiKey);
   window.BLACKOUT_DB=client;
   window.BLACKOUT_SUPABASE_READY=true;
-  let currentUser=null,currentTeam=null,currentMembers=[],progress={},unlockCode='',verdictUnlocked=false;
+  let currentUser=null,currentTeam=null,currentMembers=[],progress={},unlockCode='BLACKOUT-047',verdictUnlocked=sessionStorage.getItem('blackout_verdict_unlocked')==='1';
   let adminRows=[];
   let lab3Correct=new Set();
   const pendingKey='blackout_pending_team';
@@ -88,7 +88,7 @@
     if(error){console.warn(error);return;}
     progress={};(data||[]).forEach(r=>progress[r.lab_id]=r);
     const {data:s}=await client.from('app_settings').select('value').eq('key','verdict_unlock_code').maybeSingle();
-    unlockCode=s?.value||'';
+    unlockCode=s?.value||'BLACKOUT-047';
     updateTeamUI();
   }
 
@@ -189,7 +189,7 @@
   }
   window.registerTeam=registerTeam;
 
-  window.logoutTeam=async function(){await client.auth.signOut();currentUser=null;currentTeam=null;currentMembers=[];progress={};unlockCode='';verdictUnlocked=false;lab3Correct.clear();updateTeamUI();showPage('auth')};
+  window.logoutTeam=async function(){await client.auth.signOut();currentUser=null;currentTeam=null;currentMembers=[];progress={};unlockCode='BLACKOUT-047';verdictUnlocked=false;sessionStorage.removeItem('blackout_verdict_unlocked');lab3Correct.clear();updateTeamUI();showPage('auth')};
 
   const originalShow=window.showPage;
   window.showPage=function(id){
@@ -240,10 +240,27 @@
 
   document.addEventListener('change',e=>{if(e.target.id==='motivation'){const w=document.getElementById('motivationOtherWrap');if(w)w.style.display=e.target.value==='altro'?'block':'none'}});
 
+  window.unlockVerdict=function(){
+    const input=document.getElementById('verdictUnlockInput');
+    const code=(input?.value||'').trim();
+    if(!code){status('verdictUnlockStatus','Inserisci la chiave di accesso.','bad');return false;}
+    if(code.toUpperCase()!==String(unlockCode||'BLACKOUT-047').trim().toUpperCase()){
+      status('verdictUnlockStatus','Chiave non valida.','bad');
+      return false;
+    }
+    verdictUnlocked=true;
+    sessionStorage.setItem('blackout_verdict_unlocked','1');
+    const codeField=document.getElementById('verdictCode');
+    if(codeField)codeField.value=code;
+    updateTeamUI();
+    status('verdictUnlockStatus','Rapporto sbloccato.','ok');
+    return true;
+  };
+
   window.submitVerdict=async function(){
     if(!currentTeam||!allLabs()){showPage('labs');return}
-    const code=document.getElementById('verdictCode').value.trim(),suspect=document.getElementById('who').value,motivation=document.getElementById('motivation').value,other=document.getElementById('motivationOther').value.trim(),how=document.getElementById('how').value.trim(),proof=document.getElementById('proof').value.trim(),confidence=document.getElementById('confidence').value;
-    if(!code||!suspect||!motivation||!how||!proof){status('submit-status','Compila codice, sospettato, motivazione, ricostruzione e prove.','bad');return}
+    const code=unlockCode||'BLACKOUT-047',suspect=document.getElementById('who').value,motivation=document.getElementById('motivation').value,other=document.getElementById('motivationOther').value.trim(),how=document.getElementById('how').value.trim(),proof=document.getElementById('proof').value.trim(),confidence=document.getElementById('confidence').value;
+    if(!code||!document.getElementById('assigned').value||!suspect||!motivation||!how||!proof){status('submit-status','Compila fascicolo, sospettato, motivazione, ricostruzione e prove.','bad');return}
     if(motivation==='altro'&&!other){status('submit-status','Se scegli “Altro”, descrivi la motivazione.','bad');return}
     status('submit-status','Invio in corso…');
     const {data,error}=await client.rpc('submit_verdict',{p_code:code,p_suspect:suspect,p_motivation:motivation,p_motivation_other:other,p_how:how,p_proof:proof,p_confidence:confidence});
@@ -296,7 +313,7 @@
   }
   client.auth.onAuthStateChange((event,session)=>{
     currentUser=session?.user||null;
-    if(event==='SIGNED_OUT'){currentTeam=null;currentMembers=[];progress={};unlockCode='';verdictUnlocked=false;lab3Correct.clear();updateTeamUI();showPage('auth');}
+    if(event==='SIGNED_OUT'){currentTeam=null;currentMembers=[];progress={};unlockCode='BLACKOUT-047';verdictUnlocked=false;sessionStorage.removeItem('blackout_verdict_unlocked');lab3Correct.clear();updateTeamUI();showPage('auth');}
     else if(session&&event==='SIGNED_IN'){setTimeout(async()=>{try{const loaded=await loadTeam(session.user);updateTeamUI();if(loaded.team)showPage('labs');else if(loaded.profile?.role==='admin')showPage('admin');}catch(e){console.warn(e)}},0);}
   });
   init();
