@@ -79,3 +79,23 @@ LAB 3: non vengono più proposti i nomi DHCP/DNS/HTTP/HTTPS come opzioni. Gli st
 
 ### Correzione v6
 Risolto un errore JavaScript nel LAB 1 che impediva l'inizializzazione dell'intero sito. Il menu e tutte le pagine tornano a essere caricati correttamente.
+
+
+## Supabase: autenticazione, squadre, progressi e punteggi
+La versione v7 sostituisce la raccolta Google Apps Script con Supabase Auth + Postgres.
+- registrazione/accesso squadra con nome squadra e membri;
+- accesso a Laboratori, Sospettati e Wireshark solo dopo login;
+- punteggi laboratori 20+20+20;
+- codice globale di sblocco del Verdetto letto da `app_settings`;
+- Verdetto 40 punti; totale 100;
+- console Admin con ruolo `admin`;
+- RLS per impedire a una squadra di leggere i dati delle altre.
+
+### Configurazione
+1. Crea un progetto Supabase.
+2. Esegui `supabase-schema.sql` nel SQL Editor.
+3. In `config.js` inserisci il Project URL e la Publishable/anon key. Non inserire mai la `service_role` key nel browser.
+4. Per la registrazione scolastica puoi disattivare temporaneamente la conferma email in Supabase Auth oppure mantenere la conferma: il sito conserva localmente i dati della squadra in attesa del primo login.
+5. Crea un account docente con Supabase Auth e poi imposta `profiles.role = 'admin'` per quell'utente.
+
+Il client usa `supabase-js` via CDN; Supabase documenta l'uso del client browser e le policy RLS per proteggere i dati.
