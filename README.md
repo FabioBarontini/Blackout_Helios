@@ -99,3 +99,12 @@ La versione v7 sostituisce la raccolta Google Apps Script con Supabase Auth + Po
 5. Crea un account docente con Supabase Auth e poi imposta `profiles.role = 'admin'` per quell'utente.
 
 Il client usa `supabase-js` via CDN; Supabase documenta l'uso del client browser e le policy RLS per proteggere i dati.
+
+## v8 — accesso iniziale e chiusura dei laboratori
+- La pagina iniziale è il terminale di accesso Helios Corp, con grafica narrativa e immagine della sede.
+- Prima del login le pagine didattiche sono bloccate: la squadra entra direttamente nei Laboratori dopo l'autenticazione.
+- Ogni laboratorio mostra il punteggio salvato in Supabase e un indicatore di salvataggio.
+- Ogni laboratorio dispone di un pulsante esplicito **REGISTRA LAB** che si abilita solo quando la prova è realmente completata.
+- In fondo alla pagina Laboratori è presente **CONCLUDI FASE LABORATORI**; quando tutti e tre sono registrati, compare il codice del Verdetto.
+- Il codice è mostrato anche nella Console Admin per il docente.
+- La Publishable Key può essere inserita in `SUPABASE_PUBLISHABLE_KEY`; per compatibilità è accettata anche `SUPABASE_ANON_KEY`.

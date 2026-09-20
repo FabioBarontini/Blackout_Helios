@@ -1,21 +1,34 @@
-/* BLACKOUT // SUPABASE AUTH + TEAM STATE */
+/* BLACKOUT // SUPABASE AUTH + TEAM STATE v8 */
 (function(){
   const cfg=window.BLACKOUT_CONFIG||{};
   const sbLib=window.supabase;
-  if(!sbLib || !cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY){
+  const apiKey=cfg.SUPABASE_PUBLISHABLE_KEY||cfg.SUPABASE_ANON_KEY||'';
+  if(!sbLib || !cfg.SUPABASE_URL || !apiKey){
     window.BLACKOUT_SUPABASE_READY=false;
+    const original=window.showPage;
     window.setAuthMode=function(){};
-    window.showPage=(function(original){return function(id){if(id==='auth') return original.call(this,'auth'); return original.call(this,id)}})(window.showPage);
-    setTimeout(()=>{const s=document.getElementById('authStatus');if(s){s.className='auth-status bad';s.textContent='Supabase non configurato: inserisci SUPABASE_URL e SUPABASE_ANON_KEY in config.js.'}},100);
+    window.showPage=function(id){
+      if(id!=='auth' && id!=='admin'){id='auth';}
+      original.call(this,id);
+    };
+    setTimeout(()=>{
+      const s=document.getElementById('authStatus');
+      if(s){s.className='auth-status bad';s.textContent='Sistema di accesso non configurato. Inserire Project URL e Publishable Key in config.js.';}
+      if(typeof original==='function')original('auth');
+    },50);
     return;
   }
-  const client=sbLib.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
+
+  const client=sbLib.createClient(cfg.SUPABASE_URL,apiKey);
   window.BLACKOUT_DB=client;
+  window.BLACKOUT_SUPABASE_READY=true;
   let currentUser=null,currentTeam=null,currentMembers=[],progress={},unlockCode='';
   let adminRows=[];
+  let lab3Correct=new Set();
   const pendingKey='blackout_pending_team';
   const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   const status=(id,msg,type='')=>{const e=document.getElementById(id);if(e){e.className='auth-status '+type;e.textContent=msg}};
+  const setSaveIndicator=(lab,state,msg)=>{const e=document.getElementById(lab+'Save');if(e){e.className='save-indicator '+state;e.textContent=msg||''}};
 
   function setAuthMode(mode){
     document.getElementById('authLoginForm').style.display=mode==='login'?'block':'none';
@@ -28,9 +41,14 @@
 
   async function ensureProfile(user){
     const {data}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
-    if(!data){await client.from('profiles').insert({id:user.id,display_name:user.email||'Team'});}
+    if(!data){
+      const {error}=await client.from('profiles').insert({id:user.id,display_name:user.email||'Team'});
+      if(error) throw error;
+      return {id:user.id,role:'team',display_name:user.email||'Team'};
+    }
     return data;
   }
+
   async function createPendingTeam(user){
     const raw=localStorage.getItem(pendingKey);if(!raw)return null;
     let pending;try{pending=JSON.parse(raw)}catch{return null}
@@ -38,52 +56,96 @@
     const {data:existing}=await client.from('teams').select('*').eq('owner_id',user.id).maybeSingle();
     if(existing){localStorage.removeItem(pendingKey);return existing;}
     const {data:team,error}=await client.from('teams').insert({owner_id:user.id,name:pending.teamName.trim()}).select().single();
-    if(error) throw error;
+    if(error)throw error;
     const rows=pending.members.slice(0,8).map((name,i)=>({team_id:team.id,position:i+1,name:name.trim()})).filter(x=>x.name);
-    if(rows.length) {const {error:e}=await client.from('team_members').insert(rows);if(e)throw e;}
+    if(rows.length){const {error:e}=await client.from('team_members').insert(rows);if(e)throw e;}
     localStorage.removeItem(pendingKey);
     return team;
   }
+
   async function loadTeam(user){
-    await ensureProfile(user);
+    const profile=await ensureProfile(user);
     let {data:team,error}=await client.from('teams').select('*').eq('owner_id',user.id).maybeSingle();
     if(error)throw error;
-    if(!team) team=await createPendingTeam(user);
-    if(!team) return null;
+    if(!team)team=await createPendingTeam(user);
+    if(!team){currentTeam=null;currentMembers=[];return {profile,team:null};}
     const {data:members}=await client.from('team_members').select('name,position').eq('team_id',team.id).order('position');
     currentTeam=team;currentMembers=members||[];
     await loadProgress();
-    return team;
+    return {profile,team};
   }
+
   async function loadProgress(){
     if(!currentTeam)return;
-    const {data}=await client.from('lab_progress').select('lab_id,score,max_score,completed,updated_at').eq('team_id',currentTeam.id);
+    const {data,error}=await client.from('lab_progress').select('lab_id,score,max_score,completed,updated_at').eq('team_id',currentTeam.id);
+    if(error){console.warn(error);return;}
     progress={};(data||[]).forEach(r=>progress[r.lab_id]=r);
     const {data:s}=await client.from('app_settings').select('value').eq('key','verdict_unlock_code').maybeSingle();
     unlockCode=s?.value||'';
     updateTeamUI();
   }
-  function allLabs(){return ['lab1','lab2','lab3'].every(id=>progress[id]?.completed)}
+
+  function allLabs(){return ['lab1','lab2','lab3'].every(id=>progress[id]?.completed && Number(progress[id]?.score)>=20)}
+
+  function updateFinishControls(){
+    const checks=[
+      ['lab1',!!document.getElementById('lab1m4')?.classList.contains('done')],
+      ['lab2',document.getElementById('lab2ResultC')?.classList.contains('ok')],
+      ['lab3',Number(progress.lab3?.score||0)>=20 || lab3Correct.size>=4]
+    ];
+    checks.forEach(([lab,ready])=>{
+      const btn=document.getElementById(lab+'FinishBtn');
+      const box=document.getElementById(lab+'Finish');
+      const st=document.getElementById(lab+'FinishStatus');
+      const saved=!!progress[lab]?.completed;
+      if(btn){btn.disabled=saved||!ready;btn.textContent=saved?'LAB REGISTRATO ✓':('REGISTRA LAB '+lab.slice(-1)+' →');}
+      if(box)box.classList.toggle('ready',saved||ready);
+      if(st){
+        if(saved)st.textContent='Risultato registrato nel fascicolo della squadra.';
+        else if(lab==='lab3')st.textContent=(Number(progress.lab3?.score||0)/5)+' / 4 situazioni risolte.';
+        else st.textContent=ready?'Prova completata: puoi registrare il laboratorio.':'In attesa del completamento della prova.';
+      }
+    });
+    const finalBtn=document.getElementById('finalLabsBtn'),bar=document.getElementById('finalLabsBar'),txt=document.getElementById('finalLabsText');
+    if(finalBtn){finalBtn.disabled=!allLabs();finalBtn.textContent=allLabs()?'FASE COMPLETATA ✓':'CONCLUDI FASE LABORATORI →';}
+    if(bar)bar.classList.toggle('ready',allLabs());
+    if(txt)txt.textContent=allLabs()?'Tutti e tre i laboratori sono registrati. Il codice del verdetto è disponibile qui sotto.':'Completa e registra tutti e tre i laboratori. Il codice del verdetto comparirà qui.';
+  }
+
   function updateTeamUI(){
     const logged=!!currentTeam;
-    ['navLabs','navSuspects','navGuide'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=logged?'inline-flex':'none'});
+    ['navBriefing','navLabs','navSuspects','navGuide'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=logged?'inline-flex':'none'});
     const v=document.getElementById('navVerdict');if(v)v.style.display=logged&&allLabs()?'inline-flex':'none';
+    const admin=document.getElementById('navAdmin');if(admin)admin.style.display='inline-flex';
     const login=document.getElementById('navLogin'),logout=document.getElementById('navLogout'),badge=document.getElementById('teamBadge');
-    if(login)login.style.display=logged?'none':'inline-flex';if(logout)logout.style.display=logged?'inline-flex':'none';
+    if(login)login.style.display=logged?'none':'inline-flex';
+    if(logout)logout.style.display=logged?'inline-flex':'none';
     if(badge){badge.className='team-badge'+(logged?' open':'');badge.textContent=logged?'◉ '+currentTeam.name:''}
-    const vals=[progress.lab1,progress.lab2,progress.lab3];vals.forEach((r,i)=>{const e=document.getElementById('progressLab'+(i+1));if(!e)return;const score=r?.score||0;e.classList.toggle('done',!!r?.completed);e.querySelector('strong').textContent=score+' / 20';e.querySelector('span').textContent=r?.completed?'completato':'in corso'});
-    const unlock=document.getElementById('labUnlock');if(unlock){unlock.classList.toggle('open',logged&&allLabs());const code=document.getElementById('unlockCode');if(code)code.textContent=unlockCode||'CODICE NON CONFIGURATO'}
+    const vals=[progress.lab1,progress.lab2,progress.lab3];
+    vals.forEach((r,i)=>{const e=document.getElementById('progressLab'+(i+1));if(!e)return;const score=r?.score||0;e.classList.toggle('done',!!r?.completed);e.querySelector('strong').textContent=score+' / 20';e.querySelector('span').textContent=r?.completed?'COMPLETATO':'IN CORSO';});
+    const adminCode=document.getElementById('adminUnlockCode');if(adminCode)adminCode.textContent=unlockCode||'NON CONFIGURATO';
+    const unlock=document.getElementById('labUnlock');
+    if(unlock){unlock.classList.toggle('open',logged&&allLabs());const code=document.getElementById('unlockCode');if(code)code.textContent=unlockCode||'CODICE NON CONFIGURATO';}
     const vs=document.getElementById('verdictTeamSummary');if(vs&&logged)vs.innerHTML='<strong>'+esc(currentTeam.name)+'</strong><div class="member-list">'+currentMembers.map(m=>'<span>'+esc(m.name)+'</span>').join('')+'</div>';
     const lock=document.getElementById('verdictLocked'),wrap=document.getElementById('verdictFormWrap');if(lock&&wrap){lock.style.display=logged&&allLabs()?'none':'block';wrap.style.display=logged&&allLabs()?'grid':'none'}
+    updateFinishControls();
   }
 
   async function loginTeam(){
     const email=document.getElementById('loginEmail').value.trim(),password=document.getElementById('loginPassword').value;
     if(!email||!password){status('authStatus','Inserisci email e password.','bad');return}
-    status('authStatus','Accesso in corso…');
+    status('authStatus','Autenticazione Helios in corso…');
     const {data,error}=await client.auth.signInWithPassword({email,password});
     if(error){status('authStatus',error.message,'bad');return}
-    try{await loadTeam(data.user);status('authStatus','Accesso riuscito.','ok');showPage('labs')}catch(e){status('authStatus','Account valido, ma la squadra non è configurata: '+e.message,'bad')}
+    try{
+      const loaded=await loadTeam(data.user);
+      if(!loaded.team){
+        const role=loaded.profile?.role;
+        if(role==='admin'){status('authStatus','Accesso docente riconosciuto.','ok');showPage('admin');return;}
+        throw new Error('account valido ma nessuna squadra associata');
+      }
+      status('authStatus','Accesso riuscito.','ok');showPage('labs');
+    }catch(e){status('authStatus','Account valido, ma la squadra non è configurata: '+e.message,'bad')}
   }
   window.loginTeam=loginTeam;
 
@@ -93,47 +155,68 @@
     const email=document.getElementById('registerEmail').value.trim(),password=document.getElementById('registerPassword').value;
     if(!teamName||members.length<1||!email||password.length<6){status('authStatus','Compila nome squadra, almeno un membro, email e password (minimo 6 caratteri).','bad');return}
     localStorage.setItem(pendingKey,JSON.stringify({teamName,members}));
-    status('authStatus','Creazione account…');
+    status('authStatus','Creazione account Helios…');
     const {data,error}=await client.auth.signUp({email,password});
     if(error){status('authStatus',error.message,'bad');return}
-    if(data.session){try{await loadTeam(data.user);status('authStatus','Squadra creata.','ok');showPage('labs')}catch(e){status('authStatus','Account creato ma impossibile creare la squadra: '+e.message,'bad')}}
-    else status('authStatus','Account creato. Se la conferma email è attiva nel progetto Supabase, conferma l’indirizzo e poi accedi: i dati della squadra sono stati memorizzati temporaneamente su questo browser.','ok');
+    if(data.session){try{await loadTeam(data.user);status('authStatus','Squadra attivata.','ok');showPage('labs')}catch(e){status('authStatus','Account creato ma impossibile creare la squadra: '+e.message,'bad')}}
+    else status('authStatus','Account creato. Conferma l’email se richiesto, poi accedi nuovamente.','ok');
   }
   window.registerTeam=registerTeam;
 
-  window.logoutTeam=async function(){await client.auth.signOut();currentUser=null;currentTeam=null;currentMembers=[];progress={};updateTeamUI();showPage('auth')};
+  window.logoutTeam=async function(){await client.auth.signOut();currentUser=null;currentTeam=null;currentMembers=[];progress={};lab3Correct.clear();updateTeamUI();showPage('auth')};
 
   const originalShow=window.showPage;
   window.showPage=function(id){
-    if(['labs','suspects','suspect-detail','guide'].includes(id)&&!currentTeam){showPage('auth');return}
-    if(id==='submit'&&(!currentTeam||!allLabs())){showPage(currentTeam?'labs':'auth');return}
+    if(['briefing','labs','suspects','suspect-detail','guide'].includes(id)&&!currentTeam){originalShow('auth');return}
+    if(id==='submit'&&(!currentTeam||!allLabs())){originalShow(currentTeam?'labs':'auth');return}
     originalShow(id);
+    if(id==='labs')updateTeamUI();
     if(id==='submit')updateTeamUI();
     if(id==='admin')refreshAdminVisibility();
   };
 
   async function saveLabProgress(labId,score){
-    if(!currentTeam)return;
-    const {error}=await client.rpc('save_lab_progress',{p_lab_id:labId,p_score:score});
-    if(error){console.warn(error);return}
+    if(!currentTeam){status('authStatus','Accedi con la squadra prima di registrare i risultati.','bad');return false;}
+    setSaveIndicator(labId,'saving','SALVATAGGIO…');
+    const {data,error}=await client.rpc('save_lab_progress',{p_lab_id:labId,p_score:Math.max(0,Math.min(20,Number(score)||0))});
+    if(error){console.warn(error);setSaveIndicator(labId,'error','ERRORE SALVATAGGIO');return false;}
+    setSaveIndicator(labId,'saved','SALVATO ✓');
     await loadProgress();
+    return true;
   }
   window.saveLabProgress=saveLabProgress;
 
-  // Wrap the existing interactive labs and persist their scores.
-  const origLab1=window.lab1Verify,origL2a=window.lab2Send,origL2b=window.lab2TestB,origL2c=window.lab2TestC,origL3=window.lab3Answer;
-  if(origLab1)window.lab1Verify=function(){origLab1();const n=[1,2,3,4].filter(i=>document.getElementById('lab1m'+i)?.classList.contains('done')).length;saveLabProgress('lab1',n*5)};
-  if(origL2a)window.lab2Send=function(){origL2a();if(document.getElementById('lab2Result')?.classList.contains('ok'))saveLabProgress('lab2',7)};
-  if(origL2b)window.lab2TestB=function(){origL2b();if(document.getElementById('lab2ResultB')?.classList.contains('ok'))saveLabProgress('lab2',14)};
-  if(origL2c)window.lab2TestC=function(){origL2c();if(document.getElementById('lab2ResultC')?.classList.contains('ok'))saveLabProgress('lab2',20)};
-  const lab3Correct=new Set();
-  if(origL3)window.lab3Answer=function(i,j,btn){origL3(i,j,btn);if(btn.classList.contains('good'))lab3Correct.add(i);else lab3Correct.delete(i);saveLabProgress('lab3',lab3Correct.size*5)};
+  async function finishLab(labId){
+    if(labId==='lab1'&&!document.getElementById('lab1m4')?.classList.contains('done'))return;
+    if(labId==='lab2'&&!document.getElementById('lab2ResultC')?.classList.contains('ok'))return;
+    if(labId==='lab3'&&!(lab3Correct.size>=4 || Number(progress.lab3?.score)>=20))return;
+    const ok=await saveLabProgress(labId,20);
+    if(ok)updateFinishControls();
+  }
+  window.finishLab=finishLab;
 
-  document.addEventListener('change',e=>{if(e.target.id==='motivation')document.getElementById('motivationOtherWrap').style.display=e.target.value==='altro'?'block':'none'});
+  async function finishAllLabs(){
+    await loadProgress();
+    if(!allLabs())return;
+    updateTeamUI();
+    const bar=document.getElementById('finalLabsBar');
+    if(bar)bar.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  window.finishAllLabs=finishAllLabs;
+
+  // Existing interactive labs: persist partial progress as well as completion.
+  const origLab1=window.lab1Verify,origL2a=window.lab2Send,origL2b=window.lab2TestB,origL2c=window.lab2TestC,origL3=window.lab3Answer;
+  if(origLab1)window.lab1Verify=function(){origLab1();const n=[1,2,3,4].filter(i=>document.getElementById('lab1m'+i)?.classList.contains('done')).length;saveLabProgress('lab1',n*5);setTimeout(updateFinishControls,50)};
+  if(origL2a)window.lab2Send=function(){origL2a();if(document.getElementById('lab2Result')?.classList.contains('ok'))saveLabProgress('lab2',7);setTimeout(updateFinishControls,50)};
+  if(origL2b)window.lab2TestB=function(){origL2b();if(document.getElementById('lab2ResultB')?.classList.contains('ok'))saveLabProgress('lab2',14);setTimeout(updateFinishControls,50)};
+  if(origL2c)window.lab2TestC=function(){origL2c();if(document.getElementById('lab2ResultC')?.classList.contains('ok'))saveLabProgress('lab2',20);setTimeout(updateFinishControls,50)};
+  if(origL3)window.lab3Answer=function(i,j,btn){origL3(i,j,btn);if(btn.classList.contains('good'))lab3Correct.add(i);else lab3Correct.delete(i);saveLabProgress('lab3',lab3Correct.size*5);setTimeout(updateFinishControls,50)};
+
+  document.addEventListener('change',e=>{if(e.target.id==='motivation'){const w=document.getElementById('motivationOtherWrap');if(w)w.style.display=e.target.value==='altro'?'block':'none'}});
 
   window.submitVerdict=async function(){
     if(!currentTeam||!allLabs()){showPage('labs');return}
-    const code=document.getElementById('verdictCode').value.trim();const suspect=document.getElementById('who').value;const motivation=document.getElementById('motivation').value;const other=document.getElementById('motivationOther').value.trim();const how=document.getElementById('how').value.trim();const proof=document.getElementById('proof').value.trim();const confidence=document.getElementById('confidence').value;
+    const code=document.getElementById('verdictCode').value.trim(),suspect=document.getElementById('who').value,motivation=document.getElementById('motivation').value,other=document.getElementById('motivationOther').value.trim(),how=document.getElementById('how').value.trim(),proof=document.getElementById('proof').value.trim(),confidence=document.getElementById('confidence').value;
     if(!code||!suspect||!motivation||!how||!proof){status('submit-status','Compila codice, sospettato, motivazione, ricostruzione e prove.','bad');return}
     if(motivation==='altro'&&!other){status('submit-status','Se scegli “Altro”, descrivi la motivazione.','bad');return}
     status('submit-status','Invio in corso…');
@@ -173,10 +256,22 @@
 
   async function init(){
     const {data:{session}}=await client.auth.getSession();currentUser=session?.user||null;
-    if(currentUser){try{await loadTeam(currentUser)}catch(e){console.warn(e)}}
-    updateTeamUI();
-    if(currentTeam)showPage('labs');else showPage('auth');
+    if(currentUser){
+      try{
+        const loaded=await loadTeam(currentUser);
+        updateTeamUI();
+        if(loaded.team)showPage('labs');
+        else if(loaded.profile?.role==='admin')showPage('admin');
+        else showPage('auth');
+      }catch(e){console.warn(e);showPage('auth');}
+    }else{
+      updateTeamUI();showPage('auth');
+    }
   }
-  client.auth.onAuthStateChange((event,session)=>{currentUser=session?.user||null;if(event==='SIGNED_OUT'){currentTeam=null;currentMembers=[];progress={};updateTeamUI();showPage('auth')}else if(session && event==='SIGNED_IN'){setTimeout(async()=>{try{await loadTeam(session.user);updateTeamUI()}catch(e){console.warn(e)}},0)}});
+  client.auth.onAuthStateChange((event,session)=>{
+    currentUser=session?.user||null;
+    if(event==='SIGNED_OUT'){currentTeam=null;currentMembers=[];progress={};lab3Correct.clear();updateTeamUI();showPage('auth');}
+    else if(session&&event==='SIGNED_IN'){setTimeout(async()=>{try{const loaded=await loadTeam(session.user);updateTeamUI();if(loaded.team)showPage('labs');else if(loaded.profile?.role==='admin')showPage('admin');}catch(e){console.warn(e)}},0);}
+  });
   init();
 })();

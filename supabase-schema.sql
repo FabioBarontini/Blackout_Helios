@@ -93,7 +93,7 @@ grant execute on function public.is_admin() to authenticated;
  drop policy if exists profiles_self_select on public.profiles;
  create policy profiles_self_select on public.profiles for select to authenticated using ((select auth.uid()) = id or (select public.is_admin()));
  drop policy if exists profiles_self_insert on public.profiles;
- create policy profiles_self_insert on public.profiles for insert to authenticated with check ((select auth.uid()) = id);
+ create policy profiles_self_insert on public.profiles for insert to authenticated with check ((select auth.uid()) = id and role = 'team');
  drop policy if exists profiles_self_update on public.profiles;
  create policy profiles_self_update on public.profiles for update to authenticated using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
 
