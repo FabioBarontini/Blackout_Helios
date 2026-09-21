@@ -265,7 +265,14 @@
     status('submit-status','Invio in corso…');
     const {data,error}=await client.rpc('submit_verdict',{p_code:code,p_suspect:suspect,p_motivation:motivation,p_motivation_other:other,p_how:how,p_proof:proof,p_confidence:confidence});
     if(error){status('submit-status',error.message==='INVALID_CODE'?'Codice non valido.':error.message==='LABS_NOT_COMPLETE'?'I tre laboratori non risultano completati.':'Invio non riuscito: '+error.message,'bad');return}
-    status('submit-status','Rapporto registrato.','ok');document.getElementById('success-panel').classList.add('open');document.querySelector('#page-submit .btn-primary').disabled=true;
+    const result=data||{};
+    const panel=document.getElementById('success-panel');
+    if(panel){
+      panel.innerHTML=`<div class="success-icon">✓</div><h2>RAPPORTO REGISTRATO</h2><p class="detail">Il vostro verdetto è stato acquisito correttamente.</p><div class="score-result"><div><b>${Number(result.verdict_score)||0}/40</b><span>PUNTEGGIO VERDETTO</span></div><div><b>${Number(result.lab_score)||0}/60</b><span>LABORATORI</span></div><div><b>${Number(result.total_score)||0}/100</b><span>TOTALE</span></div></div><p class="detail" style="margin-top:14px">La soluzione non verrà mostrata.</p>`;
+      panel.classList.add('open');
+    }
+    status('submit-status','Rapporto registrato e punteggio calcolato.','ok');
+    const btn=document.querySelector('#page-submit .btn-primary'); if(btn)btn.disabled=true;
   };
 
   async function refreshAdminVisibility(){

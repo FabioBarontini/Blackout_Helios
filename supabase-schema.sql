@@ -202,7 +202,7 @@ begin
   -- The documented Aurora motive is exclusion from the project plus access/interest in its data.
   if p_suspect='sara' and (v_m like '%esclus%' or v_m like '%aurora%' or v_m like '%accesso%' or v_m like '%dati%') then
     v_motivation := 10;
-  elsif v_m in ('curiosita','curiosità','interesse personale','vantaggio professionale','dimostrare competenze') then
+  elsif v_m like '%curios%' or v_m like '%interesse personale%' or v_m like '%vantaggio professionale%' or v_m like '%dimostrare%' then
     v_motivation := 6;
   elsif p_motivation='altro' and length(trim(coalesce(p_motivation_other,'')))>=20 then
     v_motivation := 5;
