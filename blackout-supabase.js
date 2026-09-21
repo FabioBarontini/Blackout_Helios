@@ -258,7 +258,10 @@
   };
 
   window.submitVerdict=async function(){
-    if(!currentTeam||!allLabs()){showPage('labs');return}
+    if(!currentTeam){status('submit-status','La squadra non risulta autenticata.','bad');return}
+    // Refresh the database state before deciding whether the final report can be submitted.
+    await loadProgress();
+    if(!allLabs()){status('submit-status','Il rapporto è pronto, ma può essere inviato solo dopo aver registrato tutti e tre i laboratori (20/20 ciascuno).','bad');return}
     const code=unlockCode||'BLACKOUT-047',suspect=document.getElementById('who').value,motivation=document.getElementById('motivation').value,other=document.getElementById('motivationOther').value.trim(),how=document.getElementById('how').value.trim(),proof=document.getElementById('proof').value.trim(),confidence=document.getElementById('confidence').value;
     if(!code||!document.getElementById('assigned').value||!suspect||!motivation||!how||!proof){status('submit-status','Compila fascicolo, sospettato, motivazione, ricostruzione e prove.','bad');return}
     if(motivation==='altro'&&!other){status('submit-status','Se scegli “Altro”, descrivi la motivazione.','bad');return}

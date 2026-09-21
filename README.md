@@ -108,3 +108,7 @@ Il client usa `supabase-js` via CDN; Supabase documenta l'uso del client browser
 - In fondo alla pagina Laboratori è presente **CONCLUDI FASE LABORATORI**; quando tutti e tre sono registrati, compare il codice del Verdetto.
 - Il codice è mostrato anche nella Console Admin per il docente.
 - La Publishable Key può essere inserita in `SUPABASE_PUBLISHABLE_KEY`; per compatibilità è accettata anche `SUPABASE_ANON_KEY`.
+
+
+## Verdetto
+La pagina Verdetto è visibile alle squadre autenticata ma protetta dalla chiave. Prima dell'invio finale il sito aggiorna lo stato dei laboratori dal database e, se non sono tutti registrati a 20/20, mostra il motivo nella pagina senza reindirizzare ai Laboratori.
