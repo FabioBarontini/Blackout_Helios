@@ -176,7 +176,6 @@ declare
   v_team uuid;
   v_unlock text;
   v_lab_score integer;
-  v_all boolean;
   v_suspect integer := 0;
   v_motivation integer := 0;
   v_reasoning integer := 0;
@@ -192,9 +191,10 @@ begin
   select value into v_unlock from public.app_settings where key='verdict_unlock_code';
   if upper(trim(coalesce(p_code,''))) <> upper(trim(v_unlock)) then raise exception 'INVALID_CODE'; end if;
 
-  select coalesce(sum(score),0), bool_and(completed) into v_lab_score, v_all
+  -- Il verdetto può essere inviato indipendentemente dallo stato dei laboratori.
+  -- I laboratori contribuiscono comunque al punteggio finale in base a quanto registrato.
+  select coalesce(sum(score),0) into v_lab_score
   from public.lab_progress where team_id=v_team;
-  if coalesce(v_all,false) is not true or v_lab_score < 60 then raise exception 'LABS_NOT_COMPLETE'; end if;
 
   -- Verdict = 40 points. Labs = 60 points. Total = 100.
   if p_suspect='sara' then v_suspect := 15; end if;

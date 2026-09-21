@@ -259,15 +259,13 @@
 
   window.submitVerdict=async function(){
     if(!currentTeam){status('submit-status','La squadra non risulta autenticata.','bad');return}
-    // Refresh the database state before deciding whether the final report can be submitted.
     await loadProgress();
-    if(!allLabs()){status('submit-status','Il rapporto è pronto, ma può essere inviato solo dopo aver registrato tutti e tre i laboratori (20/20 ciascuno).','bad');return}
     const code=unlockCode||'BLACKOUT-047',suspect=document.getElementById('who').value,motivation=document.getElementById('motivation').value,other=document.getElementById('motivationOther').value.trim(),how=document.getElementById('how').value.trim(),proof=document.getElementById('proof').value.trim(),confidence=document.getElementById('confidence').value;
-    if(!code||!document.getElementById('assigned').value||!suspect||!motivation||!how||!proof){status('submit-status','Compila fascicolo, sospettato, motivazione, ricostruzione e prove.','bad');return}
+    if(!code||!suspect||!motivation||!how||!proof){status('submit-status','Compila sospettato, motivazione, ricostruzione e prove.','bad');return}
     if(motivation==='altro'&&!other){status('submit-status','Se scegli “Altro”, descrivi la motivazione.','bad');return}
     status('submit-status','Invio in corso…');
     const {data,error}=await client.rpc('submit_verdict',{p_code:code,p_suspect:suspect,p_motivation:motivation,p_motivation_other:other,p_how:how,p_proof:proof,p_confidence:confidence});
-    if(error){status('submit-status',error.message==='INVALID_CODE'?'Codice non valido.':error.message==='LABS_NOT_COMPLETE'?'I tre laboratori non risultano completati.':'Invio non riuscito: '+error.message,'bad');return}
+    if(error){status('submit-status',error.message==='INVALID_CODE'?'Codice non valido.':'Invio non riuscito: '+error.message,'bad');return}
     const result=data||{};
     const panel=document.getElementById('success-panel');
     if(panel){

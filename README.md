@@ -112,3 +112,7 @@ Il client usa `supabase-js` via CDN; Supabase documenta l'uso del client browser
 
 ## Verdetto
 La pagina Verdetto è visibile alle squadre autenticata ma protetta dalla chiave. Prima dell'invio finale il sito aggiorna lo stato dei laboratori dal database e, se non sono tutti registrati a 20/20, mostra il motivo nella pagina senza reindirizzare ai Laboratori.
+
+
+### v16 — Verdetto indipendente dai laboratori
+Il verdetto può essere inviato dopo lo sblocco con la chiave, anche se i laboratori non sono completati. I punti dei laboratori già registrati continuano a concorrere al totale. Per un database Supabase già esistente, eseguire `supabase-migration-verdict-no-lab-gate.sql` una sola volta. Il campo `FASCICOLO ANALIZZATO` è stato rimosso dal modulo.
