@@ -144,6 +144,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
 
 /* AUTH + TEAM STATE */
 .auth-shell{max-width:980px;margin:30px auto}.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.auth-card{background:linear-gradient(180deg,#071522,#050c14);border:1px solid #164e63;border-radius:9px;padding:24px}.auth-tabs{display:flex;gap:6px;margin-bottom:18px}.auth-tab{flex:1;padding:11px;border:1px solid #164e63;background:#06111c;color:#94a3b8;border-radius:6px;cursor:pointer;font:800 11px monospace}.auth-tab.active{color:#67e8f9;border-color:#0ea5e9;background:#0ea5e914}.auth-note{border-left:3px solid #38bdf8;background:#06111c;padding:13px 15px;color:#a8b8c8;font-size:12px;line-height:1.55;margin-bottom:15px}.auth-status{margin-top:12px;min-height:22px;font-size:12px;color:#94a3b8}.auth-status.ok{color:#86efac}.auth-status.bad{color:#fda4af}.team-badge{display:none;color:#67e8f9;border:1px solid #164e63;background:#06111c;border-radius:6px;padding:6px 9px;font:10px monospace}.team-badge.open{display:inline-flex;align-items:center;gap:7px}.team-progress{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.progress-card{background:#06111c;border:1px solid #164e63;border-radius:7px;padding:12px}.progress-card.done{border-color:#059669;background:#061a17}.progress-card b{display:block;color:#67e8f9;font:10px monospace}.progress-card strong{display:block;margin-top:6px;color:#e2e8f0;font-size:16px}.progress-card span{display:block;margin-top:4px;color:#64748b;font-size:10px}.unlock-card{display:none;margin:16px 0;border:1px solid #fbbf24;background:linear-gradient(120deg,#251c08,#07131f);border-radius:8px;padding:18px}.unlock-card.open{display:block}.unlock-code{display:inline-block;margin-top:8px;padding:10px 14px;border:1px solid #fbbf24;border-radius:6px;background:#050c13;color:#fde68a;font:800 20px monospace;letter-spacing:.12em}.team-summary{border:1px solid #164e63;background:#06111c;border-radius:7px;padding:12px;margin-bottom:15px;color:#9fb0c1;font-size:12px}.team-summary strong{color:#67e8f9}.member-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.member-list span{padding:4px 7px;border:1px solid #164e63;border-radius:4px;color:#cbd5e1;font-size:10px}.admin-login{max-width:560px;margin:25px auto}.admin-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.admin-filter{background:#06111c;border:1px solid #164e63;color:#dbeafe;border-radius:6px;padding:8px 10px;font-size:11px}.score-total{color:#67e8f9;font:800 16px monospace}.score-break{color:#64748b;font:9px monospace;line-height:1.5}@media(max-width:800px){.auth-grid,.team-progress{grid-template-columns:1fr}}
+.conversation-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.conversation-grid h4,.packet-rebuild-grid h4,.case-builder h4{font:10px monospace;color:#67e8f9;letter-spacing:.08em;margin:0 0 8px}.lab-envelope.compact{min-height:120px}.packet-rebuild-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}.part-token{font-size:10px}.case-builder{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.case-tokens{display:grid;gap:7px}.case-token{display:block;width:100%;text-align:left;padding:9px 11px;border:1px solid #164e63;background:#07131f;color:#cbd5e1;border-radius:6px;cursor:pointer;font-size:11px;line-height:1.35}.case-token:hover{border-color:#38bdf8}.case-token.used{opacity:.35;border-color:#334155;text-decoration:line-through}.case-sequence{min-height:250px;border:2px dashed #496b74;border-radius:10px;background:#050c13;padding:10px;display:grid;align-content:start;gap:7px}.sequence-item{width:100%;text-align:left;padding:9px 11px;border:1px solid #0e7490;background:#06212b;color:#dbeafe;border-radius:6px;cursor:pointer;font-size:11px;line-height:1.35}.sequence-item:hover{border-color:#67e8f9}.lab-result{min-height:44px}.lab-scenario{box-shadow:0 8px 24px #0004}@media(max-width:720px){.conversation-grid,.packet-rebuild-grid,.case-builder{grid-template-columns:1fr}}
 .lab-choices{display:grid;gap:7px;margin-top:12px}.lab-choice{padding:10px 12px;text-align:left;border:1px solid #164e63;background:#06111a;color:#cbd5e1;border-radius:6px;cursor:pointer;font-size:11px}.lab-choice:hover{border-color:#0ea5e9}.lab-choice.good{border-color:#059669;background:#06251c;color:#bbf7d0}.lab-choice.bad{border-color:#991b1b;background:#250b0b;color:#fecaca}.trace-mini{border:1px solid #164e63;background:#030a10;padding:12px;font:10px monospace;color:#93c5fd;line-height:1.9;margin-top:12px}.lab-result.ok{border-color:#059669;color:#bbf7d0}.lab-result.bad{border-color:#991b1b;color:#fecaca}</style>
 </head>
 <body>
@@ -330,10 +331,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
             <div class="lab-attached" style="width:100%;cursor:default;border-color:#164e63">CIAO<br><span style="color:#67e8f9">CONTENUTO</span></div>
             <div class="lab-muted" style="width:100%;text-align:center">Trascina qui ciò che ritieni utile.</div>
           </div>
-
           <h3 style="margin-top:16px">ARCHIVIO — INFORMAZIONI NON CLASSIFICATE</h3>
           <div class="lab-archive" id="lab2Archive"></div>
-
           <div class="lab-controls">
             <button class="btn btn-primary" onclick="lab2Send()">LANCIA IL MESSAGGIO</button>
             <button class="btn btn-outline" onclick="lab2Reset()">AZZERA</button>
@@ -343,28 +342,31 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
       </div>
 
       <div class="lab-card lab-challenge">
-        <h3>NUOVO INCIDENTE — DUE COMUNICAZIONI IDENTICHE</h3>
-        <p class="lab-muted">Ora Marta invia contemporaneamente due “CIAO” a Luca. Stesso mittente, stesso destinatario, stesso contenuto. Eppure sono due comunicazioni diverse.</p>
-        <div class="lab-clue">Trova nell'archivio due informazioni che possano permettere di distinguerle.</div>
-        <div class="lab-envelope" id="lab2EnvelopeB">
-          <div class="lab-attached" style="width:48%;cursor:default">CIAO · A</div>
-          <div class="lab-attached" style="width:48%;cursor:default">CIAO · B</div>
+        <h3>INCIDENTE 02 — DUE CONVERSAZIONI IDENTICHE</h3>
+        <p class="lab-muted">Marta sta contemporaneamente parlando con Luca e scaricando un file dal server. Le due comunicazioni hanno lo stesso mittente. Non scegliere una risposta: <strong>costruisci due comunicazioni complete</strong>.</p>
+        <div class="lab-clue">Usa le informazioni dell’archivio. Le due conversazioni devono poter essere riconosciute anche se arrivano nello stesso momento.</div>
+        <div class="conversation-grid">
+          <div><h4>COMUNICAZIONE A · MARTA → LUCA</h4><div class="lab-envelope compact" id="lab2EnvelopeB1"><div class="lab-muted">Trascina qui gli elementi scelti.</div></div></div>
+          <div><h4>COMUNICAZIONE B · MARTA → SERVER</h4><div class="lab-envelope compact" id="lab2EnvelopeB2"><div class="lab-muted">Trascina qui gli elementi scelti.</div></div></div>
         </div>
-        <div class="lab-controls"><button class="btn btn-primary" onclick="lab2TestB()">TESTA LE DUE COMUNICAZIONI</button></div>
-        <div id="lab2ResultB" class="lab-result">Risolvi prima il problema precedente.</div>
+        <div class="lab-controls"><button class="btn btn-primary" onclick="lab2TestB()">VERIFICA LE DUE COMUNICAZIONI</button><button class="btn btn-outline" onclick="lab2ResetB()">AZZERA</button></div>
+        <div id="lab2ResultB" class="lab-result">Nessuna verifica effettuata. Prima costruisci entrambe le comunicazioni.</div>
       </div>
 
       <div class="lab-card lab-challenge">
-        <h3>ULTIMO INCIDENTE — IL MESSAGGIO SI SPEZZA</h3>
-        <p class="lab-muted">Un messaggio molto grande viene diviso in parti. Una parte manca, una arriva due volte e le altre arrivano fuori ordine.</p>
-        <div class="lab-clue">Che cosa dovrebbe accompagnare ogni parte per permettere al destinatario di ricostruire il messaggio?</div>
-        <div class="lab-envelope" id="lab2EnvelopeC"><div class="lab-muted">Trascina qui la tua ipotesi.</div></div>
-        <div class="lab-controls"><button class="btn btn-primary" onclick="lab2TestC()">PROVA A RICOSTRUIRE</button></div>
-        <div id="lab2ResultC" class="lab-result">Nessuna prova effettuata.</div>
+        <h3>INCIDENTE 03 — IL MESSAGGIO SI SPEZZA</h3>
+        <p class="lab-muted">Un messaggio troppo grande viene diviso in <strong>5 parti</strong>. Le parti arrivano fuori ordine; una parte viene ripetuta e una non arriva.</p>
+        <div class="packet-rebuild-grid">
+          <div><h4>ARCHIVIO DELLE PARTI</h4><div class="lab-archive" id="lab2PartsArchive"></div></div>
+          <div><h4>INFORMAZIONI DA METTERE SU OGNI PARTE</h4><div class="lab-envelope compact" id="lab2EnvelopeC"><div class="lab-muted">Trascina qui le informazioni indispensabili.</div></div></div>
+        </div>
+        <div class="lab-clue">Non basta sapere che una parte esiste. Il destinatario deve poter capire <strong>quale messaggio sta ricostruendo, quale posizione occupa la parte e quante parti deve aspettarsi</strong>.</div>
+        <div class="lab-controls"><button class="btn btn-primary" onclick="lab2TestC()">VERIFICA LA STRUTTURA</button><button class="btn btn-outline" onclick="lab2ResetC()">AZZERA</button></div>
+        <div id="lab2ResultC" class="lab-result">Nessuna verifica effettuata.</div>
       </div>
 
       <div class="lab-finish" id="lab2Finish">
-        <div><h3>CHIUDI LABORATORIO 02</h3><p>Completa i tre incidenti. La riflessione è utile, ma la registrazione avviene quando le tre prove sono superate.</p><div class="lab-finish-status" id="lab2FinishStatus">In attesa delle tre prove.</div></div>
+        <div><h3>CHIUDI LABORATORIO 02</h3><p>Le tre prove richiedono una configurazione completa. Il sistema non segnala quale elemento è sbagliato prima della verifica.</p><div class="lab-finish-status" id="lab2FinishStatus">In attesa delle tre prove.</div></div>
         <button id="lab2FinishBtn" class="btn btn-primary" disabled onclick="finishLab('lab2')">REGISTRA LAB 02 →</button>
       </div>
 
@@ -379,13 +381,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;ba
     <section id="lab3" class="lab-panel">
       <div class="lab-mission">
         <b>MISSIONE 03 · HELIOS SERVICE DESK</b><br>
-        Quattro problemi reali della rete. In questa prova <strong>non conosci ancora i nomi tecnici delle soluzioni</strong>.
-        Il tuo compito è capire <strong>che cosa deve succedere</strong> perché ogni situazione possa funzionare.
-        Scegli un comportamento, prova la simulazione, osserva la traccia e modifica la tua ipotesi.
+        Quattro problemi reali della rete. <strong>Nessuna risposta viene segnalata subito.</strong>
+        Costruisci una sequenza, verifica l'ipotesi e solo dopo scopri se il comportamento è coerente.
       </div>
       <div class="lab-scenarios" id="lab3Scenarios"></div>
       <div class="lab-finish" id="lab3Finish">
-        <div><h3>CHIUDI LABORATORIO 03</h3><p>Individua correttamente tutte le quattro soluzioni e registra il risultato.</p><div class="lab-finish-status" id="lab3FinishStatus">0 / 4 situazioni risolte.</div></div>
+        <div><h3>CHIUDI LABORATORIO 03</h3><p>Risolvi tutti e quattro i casi. Ogni verifica restituisce solo l'esito complessivo della configurazione.</p><div class="lab-finish-status" id="lab3FinishStatus">0 / 4 situazioni risolte.</div></div>
         <button id="lab3FinishBtn" class="btn btn-primary" disabled onclick="finishLab('lab3')">REGISTRA LAB 03 →</button>
       </div>
     </section>
@@ -674,119 +675,122 @@ lab1BoardEl?.addEventListener('click',()=>{l1selected=null;lab1Render()});
 lab1Render();
 
 /* ---------- LAB 2: DISCOVERY ---------- */
-const LAB2DATA=['192.168.10.15','192.168.10.22','192.168.20.34','192.168.10.31','53124','53125','443','80','TCP','UDP','02','05','ROSSO','11:35','LAB-04','MARCO','PASSWORD','AUR-17'];
+const LAB2DATA=['192.168.10.15','192.168.10.22','192.168.20.34','192.168.10.31','192.168.10.50','53124','53125','443','80','TCP','UDP','01','02','03','04','05','ROSSO','11:35','LAB-04','MARCO','PASSWORD','AUR-17'];
+const LAB2PARTS=['PARTE 01 · HELI','PARTE 02 · OS-A','PARTE 03 · UROR','PARTE 04 · A-20','PARTE 05 · 26','PARTE 03 · UROR'];
+const LAB2META=['AUR-17','02','05','ROSSO','11:35','MARCO','PASSWORD'];
 let l2drag=null;
+function makeToken(v,cls='lab-token'){
+  const d=document.createElement('div');d.className=cls;d.draggable=true;d.dataset.val=v;d.textContent=v;
+  d.addEventListener('dragstart',()=>l2drag=d);return d;
+}
+function attachDrop(box){
+  box.addEventListener('dragover',e=>{e.preventDefault();box.classList.add('over')});
+  box.addEventListener('dragleave',()=>box.classList.remove('over'));
+  box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('over');if(!l2drag)return;const c=document.createElement('div');c.className='lab-attached';c.dataset.val=l2drag.dataset.val;c.textContent=l2drag.dataset.val;c.title='Clicca per rimuovere';c.onclick=()=>c.remove();box.appendChild(c);});
+}
 function initLab2(){
   const p=document.getElementById('lab2Archive');if(!p)return;
-  LAB2DATA.forEach(v=>{const d=document.createElement('div');d.className='lab-token';d.draggable=true;d.dataset.val=v;d.textContent=v;d.addEventListener('dragstart',()=>l2drag=d);p.appendChild(d)});
-  ['lab2Envelope','lab2EnvelopeB','lab2EnvelopeC'].forEach(id=>{
-    const box=document.getElementById(id);box.addEventListener('dragover',e=>{e.preventDefault();box.classList.add('over')});box.addEventListener('dragleave',()=>box.classList.remove('over'));box.addEventListener('drop',e=>{e.preventDefault();box.classList.remove('over');if(!l2drag)return;const c=document.createElement('div');c.className='lab-attached';c.dataset.val=l2drag.dataset.val;c.textContent=l2drag.dataset.val;c.onclick=()=>c.remove();box.appendChild(c)});
-  });
+  LAB2DATA.forEach(v=>p.appendChild(makeToken(v)));
+  const parts=document.getElementById('lab2PartsArchive');LAB2PARTS.forEach(v=>parts.appendChild(makeToken(v,'lab-token part-token')));
+  ['lab2Envelope','lab2EnvelopeB1','lab2EnvelopeB2','lab2EnvelopeC'].forEach(id=>{const box=document.getElementById(id);if(box)attachDrop(box)});
 }
 function l2vals(id){return [...document.querySelectorAll('#'+id+' .lab-attached')].map(x=>x.dataset.val)}
 function lab2Send(){
   const v=l2vals('lab2Envelope'),r=document.getElementById('lab2Result');
-  if(!v.includes('192.168.10.22')){r.className='lab-result bad';r.innerHTML='Il contenuto è partito, ma non sa dove arrivare.<br><br><b>DOMANDA:</b> quale informazione disponibile potrebbe individuare proprio la macchina di Luca?';return}
-  r.className='lab-result ok';r.innerHTML='✓ Luca ha ricevuto “CIAO”.<br><br><b>Nuovo problema:</b> ora devono viaggiare contemporaneamente due “CIAO” tra le stesse macchine. Come puoi impedire che vengano confuse?';
+  if(!v.includes('192.168.10.22')){r.className='lab-result bad';r.innerHTML='La verifica fallisce: il destinatario non è identificabile nella configurazione attuale.<br><br><b>DOMANDA:</b> quale informazione dell’archivio permette di distinguere Luca dagli altri dispositivi?';return}
+  r.className='lab-result ok';r.innerHTML='✓ Il messaggio può essere indirizzato a Luca.<br><br><b>Nuovo problema:</b> ora devi distinguere due comunicazioni contemporanee tra macchine che possono anche avere lo stesso mittente.';
 }
 function lab2Reset(){document.querySelectorAll('#lab2Envelope .lab-attached').forEach(x=>x.remove());const r=document.getElementById('lab2Result');r.className='lab-result';r.textContent='Prepara una nuova ipotesi.'}
+function lab2ResetB(){['lab2EnvelopeB1','lab2EnvelopeB2'].forEach(id=>document.querySelectorAll('#'+id+' .lab-attached').forEach(x=>x.remove()));const r=document.getElementById('lab2ResultB');r.className='lab-result';r.textContent='Le due configurazioni sono state azzerate.'}
 function lab2TestB(){
-  const v=l2vals('lab2EnvelopeB'),r=document.getElementById('lab2ResultB');
-  if(v.includes('53124')&&v.includes('53125')){r.className='lab-result ok';r.innerHTML='✓ Le due comunicazioni possono essere distinte.<br><br><b>Nuova domanda:</b> come fa il destinatario a sapere come trattare ciò che riceve?'}
-  else {r.className='lab-result bad';r.innerHTML='Le due comunicazioni continuano a essere confuse.<br><br><b>INDIZIO:</b> cerca due valori che possano identificare due conversazioni diverse che avvengono contemporaneamente.'}
+  const a=l2vals('lab2EnvelopeB1'),b=l2vals('lab2EnvelopeB2'),r=document.getElementById('lab2ResultB');
+  const okA=a.includes('53124')&&a.includes('TCP')&&a.includes('192.168.10.22');
+  const okB=b.includes('53125')&&b.includes('TCP')&&b.includes('192.168.10.50');
+  const enough=a.length>=3&&b.length>=3;
+  if(!enough){r.className='lab-result bad';r.innerHTML='CONFIGURAZIONE INCOMPLETA.<br><br>Ogni conversazione deve contenere abbastanza informazioni da poter essere distinta e indirizzata.';return}
+  if(okA&&okB){r.className='lab-result ok';r.innerHTML='✓ Le due comunicazioni sono distinguibili e ciascuna ha un destinatario coerente.<br><br><b>Non cercare ancora il nome tecnico:</b> spiega al docente quale informazione hai usato per separare le conversazioni.';}
+  else {r.className='lab-result bad';r.innerHTML='CONFIGURAZIONE NON COERENTE.<br><br>La verifica non indica quale elemento correggere. Confronta mittente, destinatario e identificatore della conversazione e riprova.';}
 }
+function lab2ResetC(){document.querySelectorAll('#lab2EnvelopeC .lab-attached').forEach(x=>x.remove());const r=document.getElementById('lab2ResultC');r.className='lab-result';r.textContent='Nessuna verifica effettuata.'}
 function lab2TestC(){
   const v=l2vals('lab2EnvelopeC'),r=document.getElementById('lab2ResultC');
-  if(v.includes('02')&&v.includes('05')){r.className='lab-result ok';r.innerHTML='✓ Hai individuato informazioni utili a capire posizione e quantità delle parti.<br><br><b>STOP.</b> Ora il docente può dare un nome tecnico alle scoperte.'}
-  else {r.className='lab-result bad';r.innerHTML='Una parte manca e una è duplicata.<br><br><b>DOMANDA:</b> come potrebbe il destinatario capire la posizione di una parte e quante parti compongono il messaggio?'}
+  const ok=v.includes('AUR-17')&&v.includes('02')&&v.includes('05')&&v.length===3;
+  if(v.length<3){r.className='lab-result bad';r.innerHTML='CONFIGURAZIONE INCOMPLETA.<br><br>Il destinatario deve poter riconoscere il messaggio, la posizione della parte e quante parti aspettarsi.';return}
+  if(ok){r.className='lab-result ok';r.innerHTML='✓ La struttura contiene le tre informazioni necessarie per riconoscere il messaggio e ricostruirne l’ordine.<br><br><b>Osservazione:</b> nel mucchio delle parti una è duplicata e una manca. Senza numerazione non sarebbe possibile accorgersene in modo affidabile.';}
+  else {r.className='lab-result bad';r.innerHTML='STRUTTURA NON SUFFICIENTE.<br><br>Non viene indicato quale informazione manca: ragiona su identità del messaggio, posizione della parte e quantità totale.';}
 }
 initLab2();
 
-/* ---------- LAB 3: SCENARIOS ---------- */
+/* ---------- LAB 3: CONSTRUCTION, NOT MULTIPLE CHOICE ---------- */
 const LAB3=[
- {
-  name:'01 · IL COMPUTER APPENA COLLEGATO',
-  q:'Un nuovo computer è stato collegato alla rete. L’utente vuole iniziare a lavorare, ma il computer non conosce ancora i parametri necessari per comunicare.',
-  goal:'Che cosa dovrebbe poter fare il computer senza che qualcuno inserisca tutto a mano?',
-  opts:[
-   {id:'a',title:'ASPETTARE UNA RISPOSTA',desc:'Il computer chiede alla rete ciò che gli serve e riceve automaticamente le impostazioni.',good:true},
-   {id:'b',title:'CERCARE UN NOME',desc:'Il computer prova a trasformare un nome scritto dall’utente in un numero.',good:false},
-   {id:'c',title:'APRIRE UNA PAGINA',desc:'Il computer prova subito a richiedere una pagina web.',good:false}
-  ],
-  reveal:'La rete può rispondere a una richiesta automatica fornendo i parametri necessari per iniziare a comunicare.',
-  teacher:'Dopo la scoperta: DHCP — Dynamic Host Configuration Protocol.'
- },
- {
-  name:'02 · UN NOME CHE NON BASTA',
-  q:'L’utente scrive “server.helios.local”. Il computer, però, per raggiungere quella macchina ha bisogno di un indirizzo numerico.',
-  goal:'Che cosa deve esistere nella rete per trasformare il nome nell’indirizzo corrispondente?',
-  opts:[
-   {id:'a',title:'UNA RUBRICA',desc:'Un servizio riceve il nome e restituisce l’indirizzo numerico associato.',good:true},
-   {id:'b',title:'UN DISTRIBUTORE',desc:'Un servizio assegna automaticamente i parametri a un nuovo computer.',good:false},
-   {id:'c',title:'UN CANALE PROTETTO',desc:'Un servizio rende illeggibile il contenuto della comunicazione.',good:false}
-  ],
-  reveal:'Esiste un servizio che funziona come una rubrica: nome → indirizzo.',
-  teacher:'Dopo la scoperta: DNS — Domain Name System.'
- },
- {
-  name:'03 · CHIEDI UNA RISORSA',
-  q:'Il browser vuole ottenere una pagina dal sito Helios. Il computer deve poter formulare una richiesta comprensibile al servizio web e ricevere una risposta.',
-  goal:'Quale comportamento serve per questo scambio?',
-  opts:[
-   {id:'a',title:'RICHIESTA + RISPOSTA',desc:'Il client formula una richiesta per una risorsa e il servizio web restituisce una risposta.',good:true},
-   {id:'b',title:'ASSEGNAZIONE AUTOMATICA',desc:'La rete assegna i parametri necessari al computer.',good:false},
-   {id:'c',title:'RICERCA DEL NOME',desc:'La rete trasforma un nome in un indirizzo numerico.',good:false}
-  ],
-  reveal:'Il web usa uno scambio strutturato di richieste e risposte per ottenere risorse.',
-  teacher:'Dopo la scoperta: HTTP — Hypertext Transfer Protocol.'
- },
- {
-  name:'04 · LA STESSA RISORSA, MA PROTETTA',
-  q:'Il browser deve ottenere una pagina, ma questa volta le informazioni scambiate non devono essere leggibili da chi osserva il traffico.',
-  goal:'Come può avvenire lo stesso tipo di comunicazione web aggiungendo protezione?',
-  opts:[
-   {id:'a',title:'WEB + CANALE PROTETTO',desc:'Lo scambio web avviene dentro una comunicazione protetta.',good:true},
-   {id:'b',title:'WEB SENZA PROTEZIONE',desc:'La richiesta e la risposta restano direttamente osservabili.',good:false},
-   {id:'c',title:'ASSEGNAZIONE AUTOMATICA',desc:'La rete fornisce al computer i parametri iniziali.',good:false}
-  ],
-  reveal:'La comunicazione web può essere protetta usando TLS, mantenendo il modello di richiesta e risposta.',
-  teacher:'Dopo la scoperta: HTTPS — HTTP Secure, cioè HTTP protetto tramite TLS.'
- }
+ {name:'01 · IL COMPUTER APPENA COLLEGATO',q:'Un nuovo PC è collegato alla rete. Non conosce ancora i parametri necessari per comunicare.',goal:'Costruisci la sequenza più coerente. Hai 6 carte, ma solo 4 appartengono alla procedura.',tokens:[
+  'PC-17 invia una richiesta alla rete',
+  'Un servizio di configurazione risponde',
+  'PC-17 riceve un indirizzo e i parametri della rete',
+  'PC-17 riceve anche le informazioni per uscire dalla rete e cercare nomi',
+  'PC-17 apre direttamente una pagina web',
+  'Il server Aurora invia il proprio indirizzo a PC-17'
+ ],solution:[0,1,2,3],teacher:'Dopo la discussione: DHCP — Dynamic Host Configuration Protocol.'},
+ {name:'02 · UN NOME NON È UN INDIRIZZO',q:'Marta digita “server.helios.local”. Il computer deve trovare l’indirizzo numerico associato prima di poter contattare il server.',goal:'Ricostruisci la piccola conversazione tra Marta e il servizio che conosce la corrispondenza nome → indirizzo.',tokens:[
+  'Marta chiede: “Qual è l’indirizzo di server.helios.local?”',
+  'Il servizio cerca il nome nella propria informazione',
+  'Il servizio risponde: 10.0.1.50',
+  'Marta usa 10.0.1.50 per contattare il server',
+  'Marta assegna a se stessa un nuovo indirizzo',
+  'Il router sostituisce il nome con una password'
+ ],solution:[0,1,2,3],teacher:'Dopo la discussione: DNS — Domain Name System.'},
+ {name:'03 · CONOSCO L’IP, MA CHI È?',q:'Marta sa che Luca usa 10.0.1.22. Nella rete locale deve però individuare il dispositivo fisico associato a quell’indirizzo.',goal:'Ricostruisci lo scambio che permette a Marta di associare un indirizzo di rete al dispositivo corretto.',tokens:[
+  'Marta chiede alla rete: “Chi possiede 10.0.1.22?”',
+  'Luca risponde indicando il proprio identificativo fisico',
+  'Marta può usare quell’associazione per inviare il dato localmente',
+  'Marta chiede a DNS di assegnare un nuovo indirizzo a Luca',
+  'Il router crea una nuova password per Luca',
+  'Luca invia a Marta il nome del sito web preferito'
+ ],solution:[0,1,2],teacher:'Dopo la discussione: ARP — Address Resolution Protocol.'},
+ {name:'04 · IL DESTINATARIO È FUORI',q:'Marta può raggiungere il server interno, ma deve anche contattare 203.0.113.42, che appartiene a un’altra rete.',goal:'Costruisci il percorso logico. Solo 4 carte sono necessarie.',tokens:[
+  'Marta consegna il traffico alla rete locale',
+  'Un dispositivo intermedio decide verso quale rete inoltrarlo',
+  'Il traffico attraversa il collegamento verso la rete esterna',
+  'La destinazione riceve il traffico',
+  'Marta consegna direttamente il traffico al server esterno con un cavo',
+  'DNS trasforma automaticamente ogni pacchetto in un percorso'
+ ],solution:[0,1,2,3],teacher:'Dopo la discussione: router, gateway e routing.'}
 ];
-
+const lab3Correct=new Set();
 function renderLab3(){
  const root=document.getElementById('lab3Scenarios');if(!root)return;
- root.innerHTML=LAB3.map((s,i)=>`
- <article class="lab-scenario">
-   <div class="section-kicker">SITUAZIONE ${String(i+1).padStart(2,'0')}</div>
-   <h3>${s.name}</h3>
-   <p class="lab-muted">${s.q}</p>
-   <div class="lab-clue"><b>DOMANDA:</b> ${s.goal}</div>
-   <div class="lab-choices">
-     ${s.opts.map((o,j)=>`<button class="lab-choice" onclick="lab3Answer(${i},${j},this)">${o.title}</button>`).join('')}
-   </div>
-   <div class="lab-trace" id="lab3trace${i}" style="display:none"></div>
-   <button class="btn btn-outline" style="margin-top:10px;padding:8px 10px;font-size:10px" onclick="lab3Reveal(${i})">OSSERVA LA TRACCIA</button>
-   <div class="lab-result" id="lab3res${i}" style="margin-top:10px">Fai una scelta.</div>
+ root.innerHTML=LAB3.map((s,i)=>`<article class="lab-scenario" id="lab3case${i}">
+   <div class="section-kicker">SITUAZIONE ${String(i+1).padStart(2,'0')}</div><h3>${s.name}</h3>
+   <p class="lab-muted">${s.q}</p><div class="lab-clue"><b>OBIETTIVO:</b> ${s.goal}</div>
+   <div class="case-builder"><div><h4>CARTELLE DISPONIBILI</h4><div class="case-tokens" id="lab3tokens${i}"></div></div>
+   <div><h4>LA TUA SEQUENZA</h4><div class="case-sequence" id="lab3seq${i}"><span class="lab-muted">Clicca le carte nell’ordine in cui pensi debbano avvenire.</span></div></div></div>
+   <div class="lab-controls"><button class="btn btn-primary" onclick="lab3Verify(${i})">VERIFICA IPOTESI</button><button class="btn btn-outline" onclick="lab3ResetCase(${i})">AZZERA</button></div>
+   <div class="lab-result" id="lab3res${i}">Nessuna verifica effettuata. Il sistema non segnala errori mentre costruisci la sequenza.</div>
  </article>`).join('');
+ LAB3.forEach((s,i)=>{
+   const box=document.getElementById('lab3tokens'+i);
+   s.tokens.forEach((t,j)=>{const b=document.createElement('button');b.className='case-token';b.textContent=t;b.dataset.idx=j;b.onclick=()=>lab3Pick(i,j,b);box.appendChild(b)});
+ });
 }
-function lab3Answer(i,j,btn){
- const s=LAB3[i],r=document.getElementById('lab3res'+i);
- btn.parentElement.querySelectorAll('.lab-choice').forEach(x=>x.classList.remove('good','bad'));
- const o=s.opts[j];
- btn.classList.add(o.good?'good':'bad');
- if(o.good){
-   r.className='lab-result ok';
-   r.innerHTML='✓ Il comportamento scelto risolve il problema.<br><br><b>Ma non fermarti al nome:</b> prova a spiegare con parole tue quale utilità svolge.';
- }else{
-   r.className='lab-result bad';
-   r.innerHTML='✗ Questa soluzione svolge un’altra funzione.<br><br><b>Chiediti:</b> che cosa manca esattamente in questa situazione?';
- }
+function lab3Pick(i,j,btn){
+ if(btn.classList.contains('used'))return;
+ const seq=document.getElementById('lab3seq'+i);const first=seq.querySelector('.lab-muted');if(first)first.remove();
+ const item=document.createElement('button');item.className='sequence-item';item.dataset.idx=j;item.textContent=(seq.querySelectorAll('.sequence-item').length+1)+'. '+LAB3[i].tokens[j];item.onclick=()=>{item.remove();btn.classList.remove('used');[...seq.querySelectorAll('.sequence-item')].forEach((x,k)=>x.textContent=(k+1)+'. '+LAB3[i].tokens[Number(x.dataset.idx)])};seq.appendChild(item);btn.classList.add('used');
 }
-function lab3Reveal(i){
- const s=LAB3[i],box=document.getElementById('lab3trace'+i);
- box.style.display='block';
- box.innerHTML=`<b>TRACCIA OSSERVATA</b><br>${s.reveal}<br><br><span style="color:#67e8f9">Il nome tecnico viene introdotto dal docente dopo la discussione.</span>`;
+function lab3ResetCase(i){
+ document.querySelectorAll('#lab3tokens'+i+' .case-token').forEach(x=>x.classList.remove('used'));
+ document.getElementById('lab3seq'+i).innerHTML='<span class="lab-muted">Clicca le carte nell’ordine in cui pensi debbano avvenire.</span>';
+ const r=document.getElementById('lab3res'+i);r.className='lab-result';r.textContent='Configurazione azzerata. Nessun indizio viene rivelato.';
+ lab3Correct.delete(i);saveLabProgress('lab3',lab3Correct.size*5);setTimeout(updateFinishControls,50);
+}
+function lab3Verify(i){
+ const seq=[...document.querySelectorAll('#lab3seq'+i+' .sequence-item')].map(x=>Number(x.dataset.idx));
+ const r=document.getElementById('lab3res'+i);
+ if(!seq.length){r.className='lab-result bad';r.textContent='CONFIGURAZIONE VUOTA. Costruisci una sequenza prima di verificarla.';return}
+ const sol=LAB3[i].solution,ok=seq.length===sol.length&&seq.every((v,k)=>v===sol[k]);
+ if(ok){lab3Correct.add(i);r.className='lab-result ok';r.innerHTML='✓ CONFIGURAZIONE COERENTE. Hai ricostruito il comportamento senza conoscere ancora il termine tecnico.<br><br><b>Ora fermati:</b> annota che cosa hai scoperto e aspetta il debriefing del docente.';}
+ else {lab3Correct.delete(i);r.className='lab-result bad';r.innerHTML='CONFIGURAZIONE NON COERENTE.<br><br>Il sistema non indica quale carta è sbagliata. Rileggi il problema, elimina le carte che sembrano appartenere a un’altra situazione e ricostruisci la sequenza.';}
+ saveLabProgress('lab3',lab3Correct.size*5);setTimeout(updateFinishControls,50);
 }
 renderLab3();
 

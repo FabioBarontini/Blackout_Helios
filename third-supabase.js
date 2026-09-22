@@ -99,7 +99,7 @@
     const checks=[
       ['lab1',!!document.getElementById('lab1m4')?.classList.contains('done')],
       ['lab2',document.getElementById('lab2ResultC')?.classList.contains('ok')],
-      ['lab3',Number(progress.lab3?.score||0)>=20 || lab3Correct.size>=4]
+      ['lab3',Number(progress.lab3?.score||0)>=20 || document.querySelectorAll('#lab3Scenarios .lab-result.ok').length>=4]
     ];
     checks.forEach(([lab,ready])=>{
       const btn=document.getElementById(lab+'FinishBtn');
@@ -215,7 +215,7 @@
   async function finishLab(labId){
     if(labId==='lab1'&&!document.getElementById('lab1m4')?.classList.contains('done'))return;
     if(labId==='lab2'&&!document.getElementById('lab2ResultC')?.classList.contains('ok'))return;
-    if(labId==='lab3'&&!(lab3Correct.size>=4 || Number(progress.lab3?.score)>=20))return;
+    if(labId==='lab3'&&!(document.querySelectorAll('#lab3Scenarios .lab-result.ok').length>=4 || Number(progress.lab3?.score)>=20))return;
     const ok=await saveLabProgress(labId,20);
     if(ok)updateFinishControls();
   }
@@ -231,12 +231,11 @@
   window.finishAllLabs=finishAllLabs;
 
   // Existing interactive labs: persist partial progress as well as completion.
-  const origLab1=window.lab1Verify,origL2a=window.lab2Send,origL2b=window.lab2TestB,origL2c=window.lab2TestC,origL3=window.lab3Answer;
+  const origLab1=window.lab1Verify,origL2a=window.lab2Send,origL2b=window.lab2TestB,origL2c=window.lab2TestC;
   if(origLab1)window.lab1Verify=function(){origLab1();const n=[1,2,3,4].filter(i=>document.getElementById('lab1m'+i)?.classList.contains('done')).length;saveLabProgress('lab1',n*5);setTimeout(updateFinishControls,50)};
   if(origL2a)window.lab2Send=function(){origL2a();if(document.getElementById('lab2Result')?.classList.contains('ok'))saveLabProgress('lab2',7);setTimeout(updateFinishControls,50)};
   if(origL2b)window.lab2TestB=function(){origL2b();if(document.getElementById('lab2ResultB')?.classList.contains('ok'))saveLabProgress('lab2',14);setTimeout(updateFinishControls,50)};
   if(origL2c)window.lab2TestC=function(){origL2c();if(document.getElementById('lab2ResultC')?.classList.contains('ok'))saveLabProgress('lab2',20);setTimeout(updateFinishControls,50)};
-  if(origL3)window.lab3Answer=function(i,j,btn){origL3(i,j,btn);if(btn.classList.contains('good'))lab3Correct.add(i);else lab3Correct.delete(i);saveLabProgress('lab3',lab3Correct.size*5);setTimeout(updateFinishControls,50)};
 
   document.addEventListener('change',e=>{if(e.target.id==='motivation'){const w=document.getElementById('motivationOtherWrap');if(w)w.style.display=e.target.value==='altro'?'block':'none'}});
 
