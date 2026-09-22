@@ -1,14 +1,117 @@
 <!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLACKOUT · Helios Access</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><style>
 *{box-sizing:border-box}body{margin:0;background:#03080d;color:#e5eef6;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 15% 10%,#0ea5e912,transparent 32%),radial-gradient(circle at 85% 80%,#22d3ee0d,transparent 35%);pointer-events:none}.wrap{max-width:1120px;margin:auto;padding:42px 24px}.top{display:flex;justify-content:space-between;align-items:center;font:10px monospace;letter-spacing:.14em;color:#64748b}.brand{font-size:18px;color:#e2e8f0;font-weight:900;letter-spacing:.08em}.brand span{color:#38bdf8}.case{border:1px solid #164e63;padding:7px 10px;background:#06111a}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:stretch;margin-top:55px}.hero,.panel{border:1px solid #164e63;background:linear-gradient(145deg,#071722,#040a10);border-radius:12px;box-shadow:0 25px 80px #0008}.hero{padding:42px;position:relative;overflow:hidden}.hero:after{content:"HX-047";position:absolute;right:-18px;top:35px;font:900 92px monospace;color:#38bdf80a;transform:rotate(-12deg)}.kicker{font:10px monospace;color:#67e8f9;letter-spacing:.16em}.hero h1{font-size:clamp(70px,10vw,132px);line-height:.8;margin:24px 0 26px;letter-spacing:-.08em}.hero h1 span{color:#38bdf8}.hero p{font-size:18px;line-height:1.65;color:#94a3b8;max-width:680px}.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:32px}.signal{padding:13px;border:1px solid #123447;background:#06111a}.signal b{display:block;font:10px monospace;color:#cbd5e1}.signal span{display:block;margin-top:6px;color:#64748b;font-size:11px}.panel{padding:28px}.panel h2{margin:6px 0 8px}.muted{color:#64748b;font-size:12px;line-height:1.55}.tabs{display:flex;gap:7px;margin:22px 0}.tab{flex:1;border:1px solid #164e63;background:#06111a;color:#94a3b8;padding:10px;border-radius:6px;font:800 10px monospace;cursor:pointer}.tab.active{color:#67e8f9;border-color:#0ea5e9;background:#0ea5e912}.form{display:none}.form.active{display:block}.group{margin:14px 0}.group label{display:block;font:10px monospace;color:#94a3b8;margin-bottom:7px;letter-spacing:.06em}input,select,textarea{width:100%;background:#030a10;color:#e2e8f0;border:1px solid #164e63;border-radius:6px;padding:12px;font-size:13px;outline:none}input:focus,select:focus{border-color:#0ea5e9}.btn{width:100%;border:1px solid #0891b2;background:#0e7490;color:white;padding:12px;border-radius:6px;font:900 11px monospace;cursor:pointer}.btn:hover{background:#0f8cab}.status{min-height:24px;margin-top:14px;font-size:12px}.status.bad{color:#fda4af}.status.ok{color:#86efac}.small{font-size:10px;color:#475569;line-height:1.5;margin-top:14px}.doc{margin-top:12px;border-top:1px solid #123447;padding-top:15px}.doc button{background:none;border:0;color:#67e8f9;cursor:pointer;font:10px monospace}.track-note{margin-top:20px;border-left:3px solid #38bdf8;background:#06111a;padding:13px;color:#94a3b8;font-size:11px;line-height:1.55}@media(max-width:850px){.grid{grid-template-columns:1fr}.hero{padding:28px}.signals{grid-template-columns:1fr}.wrap{padding:25px 14px}}
 </style></head><body><div class="wrap"><div class="top"><div class="brand">BLACK<span>OUT</span> · HELIOS SECURITY</div><div class="case">CASE HX-047 · SECURE ACCESS</div></div><div class="grid"><section class="hero"><div class="kicker">HELIOS CORP · TRAINING NETWORK</div><h1>BLACK<span>OUT</span></h1><p>Un unico accesso. Due percorsi didattici. Scegli la tua classe: la rete riconoscerà il percorso assegnato alla squadra e aprirà l'ambiente corretto.</p><div class="signals"><div class="signal"><b>02 · DISCOVERY</b><span>Laboratori BLACKOUT per la seconda.</span></div><div class="signal"><b>03 · INVESTIGATION</b><span>Laboratori + indagine PCAP per la terza.</span></div><div class="signal"><b>01 · DATABASE</b><span>Squadre, progressi e verdetti nello stesso archivio.</span></div></div><div class="track-note"><strong>Importante:</strong> la scelta della classe non cambia il database. Cambia solamente il percorso che viene aperto dopo l'accesso.</div></section><section class="panel"><div class="kicker">HELIOS ACCESS TERMINAL</div><h2>Ingresso della squadra</h2><p class="muted">Usa il nome della squadra e la password. La classe serve a indirizzarti al percorso corretto.</p><div class="tabs"><button class="tab active" id="tlogin">ACCEDI</button><button class="tab" id="treg">NUOVA SQUADRA</button></div><div class="form active" id="login"><div class="group"><label>CLASSE</label><select id="loginClass"><option value="2">Seconda</option><option value="3">Terza</option></select></div><div class="group"><label>NOME DELLA SQUADRA</label><input id="loginTeam" placeholder="es. NetDetective"></div><div class="group"><label>PASSWORD</label><input id="loginPassword" type="password"></div><button class="btn" id="loginBtn">ENTRA NELLA RETE →</button><div class="status" id="loginStatus"></div></div><div class="form" id="register"><div class="group"><label>CLASSE</label><select id="registerClass"><option value="2">Seconda</option><option value="3">Terza</option></select></div><div class="group"><label>NOME DELLA SQUADRA</label><input id="registerTeam" placeholder="es. NetDetective"></div><div class="group"><label>MEMBRI DELLA SQUADRA</label><textarea id="registerMembers" rows="4" placeholder="Un nome per riga"></textarea></div><div class="group"><label>PASSWORD · ALMENO 6 CARATTERI</label><input id="registerPassword" type="password"></div><button class="btn" id="registerBtn">ATTIVA LA SQUADRA →</button><div class="status" id="registerStatus"></div></div><div class="doc"><button id="docBtn">ACCESSO DOCENTE →</button><div id="docBox" style="display:none"><div class="group"><label>EMAIL DOCENTE</label><input id="adminEmail" type="email"></div><div class="group"><label>PASSWORD</label><input id="adminPassword" type="password"></div><button class="btn" id="adminBtn">APRI CONSOLE DOCENTE</button><div class="status" id="adminStatus"></div></div></div><div class="small">Le credenziali delle squadre sono utilizzate solo per autenticare l'accesso al percorso didattico. Non inserire qui la password del docente salvo nell'area dedicata.</div></section></div></div><script>
-const cfg=window.BLACKOUT_CONFIG||{};const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_PUBLISHABLE_KEY);const $=id=>document.getElementById(id);
-function emailFor(n){let h=2166136261;for(const ch of n.trim()){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}h>>>=0;return 'team-'+h.toString(36)+'@blackout.local'}
-function msg(id,t,c=''){const e=$(id);e.textContent=t;e.className='status '+c}
-$('tlogin').onclick=()=>{ $('tlogin').classList.add('active');$('treg').classList.remove('active');$('login').classList.add('active');$('register').classList.remove('active')};$('treg').onclick=()=>{ $('treg').classList.add('active');$('tlogin').classList.remove('active');$('register').classList.add('active');$('login').classList.remove('active')};
-$('docBtn').onclick=()=>{$('docBox').style.display=$('docBox').style.display==='none'?'block':'none'};
-async function routeUser(user,requestedClass){const {data:profile}=await sb.from('profiles').select('role').eq('id',user.id).maybeSingle();if(profile?.role==='admin'){location.href='third.html?admin=1';return}const {data:team,error}=await sb.from('teams').select('id,name,class_level').eq('owner_id',user.id).maybeSingle();if(error||!team)throw new Error('account valido ma squadra non configurata');if(Number(team.class_level)!==Number(requestedClass))throw new Error('La squadra è registrata come '+(Number(team.class_level)===2?'seconda':'terza')+'. Seleziona la classe corretta.');location.href=Number(team.class_level)===2?'second.html':'third.html'}
-$('loginBtn').onclick=async()=>{const c=$('loginClass').value,n=$('loginTeam').value.trim(),p=$('loginPassword').value;if(!n||!p){msg('loginStatus','Inserisci classe, squadra e password.','bad');return}msg('loginStatus','Accesso alla rete Helios…');const {data,error}=await sb.auth.signInWithPassword({email:emailFor(n),password:p});if(error){msg('loginStatus',error.message,'bad');return}try{await routeUser(data.user,c)}catch(e){msg('loginStatus',e.message,'bad')}};
-$('registerBtn').onclick=async()=>{const c=Number($('registerClass').value),n=$('registerTeam').value.trim(),members=$('registerMembers').value.split(/\n|,/).map(x=>x.trim()).filter(Boolean).slice(0,8),p=$('registerPassword').value;if(!n||!members.length||p.length<6){msg('registerStatus','Compila classe, squadra, almeno un membro e una password di 6 caratteri.','bad');return}localStorage.setItem('blackout_pending_team',JSON.stringify({teamName:n,members,classLevel:c}));msg('registerStatus','Attivazione della squadra…');const {data,error}=await sb.auth.signUp({email:emailFor(n),password:p});if(error){localStorage.removeItem('blackout_pending_team');msg('registerStatus',/already|exists/i.test(error.message)?'Questa squadra è già registrata. Usa ACCEDI.':error.message,'bad');return}if(data.session){try{const {data:team,error:e}=await sb.from('teams').insert({owner_id:data.user.id,name:n,class_level:c}).select().single();if(e)throw e;const rows=members.map((x,i)=>({team_id:team.id,position:i+1,name:x}));await sb.from('team_members').insert(rows);localStorage.removeItem('blackout_pending_team');location.href=c===2?'second.html':'third.html'}catch(e){msg('registerStatus','Account creato, ma configurazione squadra non completata: '+e.message,'bad')}}else msg('registerStatus','Registrazione completata. Se richiesto, conferma l'email e poi accedi.','ok')};
-$('adminBtn').onclick=async()=>{const e=$('adminEmail').value.trim(),p=$('adminPassword').value;if(!e||!p){msg('adminStatus','Inserisci email e password.','bad');return}const {data,error}=await sb.auth.signInWithPassword({email:e,password:p});if(error){msg('adminStatus',error.message,'bad');return}const {data:profile}=await sb.from('profiles').select('role').eq('id',data.user.id).maybeSingle();if(profile?.role!=='admin'){await sb.auth.signOut();msg('adminStatus','Account non autorizzato come docente.','bad');return}location.href='third.html?admin=1'};
-(async()=>{const {data:{session}}=await sb.auth.getSession();if(session){const q=new URLSearchParams(location.search);if(q.get('class'))try{await routeUser(session.user,q.get('class'))}catch{}}})();
+// BLACKOUT ACCESS TERMINAL v18.2
+// I pulsanti di navigazione vengono inizializzati PRIMA del client Supabase,
+// così la schermata resta utilizzabile anche se il backend/CDN ha un problema.
+const $=id=>document.getElementById(id);
+function msg(id,t,c=''){const e=$(id);if(e){e.textContent=t;e.className='status '+c}}
+function switchTab(mode){
+  const login=mode==='login';
+  $('tlogin').classList.toggle('active',login);
+  $('treg').classList.toggle('active',!login);
+  $('login').classList.toggle('active',login);
+  $('register').classList.toggle('active',!login);
+  if(!login) setTimeout(()=>$('registerClass').focus(),0);
+}
+$('tlogin').addEventListener('click',()=>switchTab('login'));
+$('treg').addEventListener('click',()=>switchTab('register'));
+$('docBtn').addEventListener('click',()=>{$('docBox').style.display=$('docBox').style.display==='none'?'block':'none'});
+
+let sb=null;
+function getClient(){
+  if(sb) return sb;
+  const cfg=window.BLACKOUT_CONFIG||{};
+  if(!window.supabase || !cfg.SUPABASE_URL || !cfg.SUPABASE_PUBLISHABLE_KEY){
+    throw new Error('Sistema di accesso non configurato. Controlla config.js e il caricamento di Supabase.');
+  }
+  sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_PUBLISHABLE_KEY);
+  return sb;
+}
+function emailFor(n){
+  let h=2166136261;
+  for(const ch of n.trim()){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}
+  h>>>=0;
+  return 'team-'+h.toString(36)+'@blackout.local';
+}
+async function routeUser(user,requestedClass){
+  const client=getClient();
+  const {data:profile}=await client.from('profiles').select('role').eq('id',user.id).maybeSingle();
+  if(profile?.role==='admin'){location.href='third.html?admin=1';return;}
+  const {data:team,error}=await client.from('teams').select('id,name,class_level').eq('owner_id',user.id).maybeSingle();
+  if(error) throw new Error(error.message);
+  if(!team) throw new Error('Account valido ma squadra non configurata. Se hai appena creato la squadra, usa NUOVA SQUADRA oppure riprova dopo la registrazione.');
+  if(Number(team.class_level)!==Number(requestedClass)){
+    throw new Error('La squadra è registrata come '+(Number(team.class_level)===2?'seconda':'terza')+'. Seleziona la classe corretta.');
+  }
+  location.href=Number(team.class_level)===2?'second.html':'third.html';
+}
+
+$('loginBtn').addEventListener('click',async()=>{
+  try{
+    const client=getClient();
+    const c=$('loginClass').value,n=$('loginTeam').value.trim(),p=$('loginPassword').value;
+    if(!n||!p){msg('loginStatus','Inserisci classe, squadra e password.','bad');return}
+    msg('loginStatus','Accesso alla rete Helios…');
+    const {data,error}=await client.auth.signInWithPassword({email:emailFor(n),password:p});
+    if(error){msg('loginStatus',error.message,'bad');return}
+    await routeUser(data.user,c);
+  }catch(e){msg('loginStatus',e.message||String(e),'bad')}
+});
+
+$('registerBtn').addEventListener('click',async()=>{
+  try{
+    const client=getClient();
+    const c=Number($('registerClass').value),n=$('registerTeam').value.trim();
+    const members=$('registerMembers').value.split(/\n|,/).map(x=>x.trim()).filter(Boolean).slice(0,8);
+    const p=$('registerPassword').value;
+    if(!n||!members.length||p.length<6){msg('registerStatus','Compila classe, squadra, almeno un membro e una password di 6 caratteri.','bad');return}
+    localStorage.setItem('blackout_pending_team',JSON.stringify({teamName:n,members,classLevel:c}));
+    msg('registerStatus','Attivazione della squadra…');
+    const {data,error}=await client.auth.signUp({email:emailFor(n),password:p});
+    if(error){localStorage.removeItem('blackout_pending_team');msg('registerStatus',/already|exists/i.test(error.message)?'Questa squadra è già registrata. Usa ACCEDI.':error.message,'bad');return}
+    if(data.session){
+      // Con conferma email disattivata, la sessione è immediata e possiamo creare la squadra.
+      await createTeamForUser(client,data.user,n,members,c);
+      localStorage.removeItem('blackout_pending_team');
+      location.href=c===2?'second.html':'third.html';
+    }else{
+      msg('registerStatus','Account creato ma Supabase richiede la conferma email. Per le squadre scolastiche usa Auth → Email → disattiva “Confirm email”, poi registra nuovamente la squadra.','bad');
+    }
+  }catch(e){msg('registerStatus',e.message||String(e),'bad')}
+});
+
+async function createTeamForUser(client,user,n,members,c){
+  const {data:team,error:e}=await client.from('teams').insert({owner_id:user.id,name:n,class_level:c}).select().single();
+  if(e) throw new Error(e.code==='23505'?'Questo nome di squadra è già utilizzato. Scegline un altro.':e.message);
+  const rows=members.map((x,i)=>({team_id:team.id,position:i+1,name:x}));
+  const {error:e2}=await client.from('team_members').insert(rows);
+  if(e2){await client.from('teams').delete().eq('id',team.id);throw new Error(e2.message)}
+  return team;
+}
+
+$('adminBtn').addEventListener('click',async()=>{
+  try{
+    const client=getClient();
+    const e=$('adminEmail').value.trim(),p=$('adminPassword').value;
+    if(!e||!p){msg('adminStatus','Inserisci email e password.','bad');return}
+    const {data,error}=await client.auth.signInWithPassword({email:e,password:p});
+    if(error){msg('adminStatus',error.message,'bad');return}
+    const {data:profile}=await client.from('profiles').select('role').eq('id',data.user.id).maybeSingle();
+    if(profile?.role!=='admin'){await client.auth.signOut();msg('adminStatus','Account non autorizzato come docente.','bad');return}
+    location.href='third.html?admin=1';
+  }catch(e){msg('adminStatus',e.message||String(e),'bad')}
+});
+
+// Se esiste già una sessione, il percorso può essere aperto automaticamente.
+(async()=>{
+  try{
+    const client=getClient();
+    const {data:{session}}=await client.auth.getSession();
+    if(session){
+      const q=new URLSearchParams(location.search);
+      if(q.get('class')) await routeUser(session.user,q.get('class'));
+    }
+  }catch(e){console.warn('BLACKOUT init:',e)}
+})();
 </script></body></html>
