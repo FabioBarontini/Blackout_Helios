@@ -59,7 +59,8 @@
     if(!pending?.teamName || !Array.isArray(pending.members))return null;
     const {data:existing}=await client.from('teams').select('*').eq('owner_id',user.id).maybeSingle();
     if(existing){localStorage.removeItem(pendingKey);return existing;}
-    const {data:team,error}=await client.from('teams').insert({owner_id:user.id,name:pending.teamName.trim()}).select().single();
+    const classLevel=Number(pending.classLevel)===3?3:2;
+    const {data:team,error}=await client.from('teams').insert({owner_id:user.id,name:pending.teamName.trim(),class_level:classLevel}).select().single();
     if(error){
       const msg=error.code==='23505'?'Questo nome di squadra è già utilizzato. Scegline un altro.':(error.message||'Impossibile creare la squadra.');
       throw new Error(msg);

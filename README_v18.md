@@ -37,3 +37,7 @@ where name = 'NOME_SQUADRA';
 ```
 
 Non inserire mai una service-role key nel frontend.
+
+
+## Correzione v18.1
+È stata corretta la creazione differita delle squadre: quando la registrazione richiede conferma email, il campo `class_level` viene ora salvato usando la classe scelta (2 o 3), invece di usare sempre il default della seconda.
