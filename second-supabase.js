@@ -1,6 +1,6 @@
 (function(){
  const cfg=window.BLACKOUT_CONFIG||{};const client=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_PUBLISHABLE_KEY);window.BLACKOUT_DB=client;
- let currentUser=null,currentTeam=null,currentMembers=[],unlockCode='BLACKOUT-047',progress={};
+ let currentUser=null,currentTeam=null,currentMembers=[],unlockCode='BLACKOUT-047',progress={},verdictUnlocked=false;
  const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
  function emailFor(n){let h=2166136261;for(const ch of n.trim()){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}h>>>=0;return 'team-'+h.toString(36)+'@blackout.local'}
  function guard(msg){const g=document.getElementById('secondGuard');if(g)g.textContent=msg||'ACCESSO HELIOS';}
@@ -32,10 +32,25 @@
    if(typeof window.lab3Answer==='function'){const old=window.lab3Answer;window.lab3Answer=function(i,j,b){old(i,j,b);setTimeout(()=>{const n=[0,1,2,3].filter(k=>document.getElementById('lab3res'+k)?.classList.contains('ok')).length;saveLab('lab3',n*5,n===4)},80)}}
  }
  window.secondLogout=async()=>{await client.auth.signOut();location.href='index.html?class=2'};
+ window.unlockSecondVerdict=async function(){
+   const input=document.getElementById('verdictUnlockInput');
+   const code=(input?.value||'').trim();
+   const st=document.getElementById('verdictUnlockStatus');
+   if(!code){if(st)st.innerHTML='<div class="note" style="border-color:var(--amber)">⚠ Inserisci la chiave di accesso.</div>';return false}
+   if(code.toUpperCase()!==String(unlockCode||'BLACKOUT-047').trim().toUpperCase()){if(st)st.innerHTML='<div class="note" style="border-color:var(--amber)">⚠ Chiave non valida.</div>';return false}
+   verdictUnlocked=true;
+   const gate=document.getElementById('verdictGate'),wrap=document.getElementById('verdictFormWrap');
+   if(gate)gate.style.display='none';
+   if(wrap)wrap.style.display='block';
+   if(st)st.innerHTML='<span class="pill">RAPPORTO SBLOCCATO ✓</span>';
+   return true;
+ };
+
  // The second-path verdict uses the existing 7-parameter RPC and the common unlock code.
  window.submitVerdict=async function(){
    const suspect=document.getElementById('who')?.value,motivation=document.getElementById('motivation')?.value||'',other=document.getElementById('motivationOther')?.value.trim()||'',how=document.getElementById('how')?.value.trim()||'',proof=document.getElementById('proof')?.value.trim()||'',confidence=document.getElementById('confidence')?.value||'';
-   if(!currentTeam||!suspect||!motivation||!how||!proof){const e=document.getElementById('submit-status');if(e)e.innerHTML='<div class="note" style="border-color:var(--amber)">⚠ Compila tutti i campi del rapporto.</div>';return}
+   if(!verdictUnlocked){const e=document.getElementById('submit-status');if(e)e.innerHTML='<div class="note" style="border-color:var(--amber)">⚠ Sblocca prima il rapporto con la chiave BLACKOUT.</div>';return}
+   if(!currentTeam||!suspect||!how||!proof){const e=document.getElementById('submit-status');if(e)e.innerHTML='<div class="note" style="border-color:var(--amber)">⚠ Compila sospettato, ricostruzione e prove.</div>';return}
    const e=document.getElementById('submit-status');if(e)e.innerHTML='<span class="pill">INVIO IN CORSO…</span>';
    const {data,error}=await client.rpc('submit_verdict',{p_code:unlockCode,p_suspect:suspect,p_motivation:motivation,p_motivation_other:other,p_how:how,p_proof:proof,p_confidence:confidence});
    if(error){if(e)e.innerHTML='<div class="note" style="border-color:var(--amber)">⚠ '+esc(error.message)+'</div>';return}
